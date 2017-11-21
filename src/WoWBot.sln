@@ -1,0 +1,65 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2002
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WoWBot.Common", "Common\WoWBot.Common.csproj", "{BB595056-B87E-4B00-9284-410F8CD79F4F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{4AB57647-D0A9-471C-97C6-B345F26FC233}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{B11D882D-8ECF-40C4-87C4-8C31E9A68030}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{3EBAAC63-F5DA-4104-BF03-862CB9205049}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WoWBot.Server", "WoWBot.Server\WoWBot.Server.csproj", "{B9239DA2-86C7-44E3-9D22-522B78AA334A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WoWBot.Client", "WoWBot.Client\WoWBot.Client.csproj", "{61476A04-81B7-49C7-A0AC-8804D53590D9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dlls", "Dlls", "{D8894BD0-3F11-4BFD-A9A8-6444B45FCE76}"
+	ProjectSection(SolutionItems) = preProject
+		Dlls\MemoryRobot.dll = Dlls\MemoryRobot.dll
+		Dlls\MissingFiles.txt = Dlls\MissingFiles.txt
+		Dlls\robotManager.dll = Dlls\robotManager.dll
+		Dlls\wManager.dll = Dlls\wManager.dll
+		Dlls\wResources.dll = Dlls\wResources.dll
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WoWBot.WindowsOverlay", "WoWBot.WindowsOverlay\WoWBot.WindowsOverlay.csproj", "{3DFE3700-95D0-47EE-AAE7-7237D9F0DD69}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BB595056-B87E-4B00-9284-410F8CD79F4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB595056-B87E-4B00-9284-410F8CD79F4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB595056-B87E-4B00-9284-410F8CD79F4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB595056-B87E-4B00-9284-410F8CD79F4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9239DA2-86C7-44E3-9D22-522B78AA334A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9239DA2-86C7-44E3-9D22-522B78AA334A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9239DA2-86C7-44E3-9D22-522B78AA334A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9239DA2-86C7-44E3-9D22-522B78AA334A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61476A04-81B7-49C7-A0AC-8804D53590D9}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{61476A04-81B7-49C7-A0AC-8804D53590D9}.Debug|Any CPU.Build.0 = Debug|x86
+		{61476A04-81B7-49C7-A0AC-8804D53590D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61476A04-81B7-49C7-A0AC-8804D53590D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DFE3700-95D0-47EE-AAE7-7237D9F0DD69}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{3DFE3700-95D0-47EE-AAE7-7237D9F0DD69}.Debug|Any CPU.Build.0 = Debug|x86
+		{3DFE3700-95D0-47EE-AAE7-7237D9F0DD69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DFE3700-95D0-47EE-AAE7-7237D9F0DD69}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BB595056-B87E-4B00-9284-410F8CD79F4F} = {4AB57647-D0A9-471C-97C6-B345F26FC233}
+		{B9239DA2-86C7-44E3-9D22-522B78AA334A} = {B11D882D-8ECF-40C4-87C4-8C31E9A68030}
+		{61476A04-81B7-49C7-A0AC-8804D53590D9} = {3EBAAC63-F5DA-4104-BF03-862CB9205049}
+		{D8894BD0-3F11-4BFD-A9A8-6444B45FCE76} = {3EBAAC63-F5DA-4104-BF03-862CB9205049}
+		{3DFE3700-95D0-47EE-AAE7-7237D9F0DD69} = {3EBAAC63-F5DA-4104-BF03-862CB9205049}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9B0C0886-41C7-4C74-8899-45253667DE41}
+	EndGlobalSection
+EndGlobal
