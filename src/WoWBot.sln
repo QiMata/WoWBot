@@ -26,28 +26,63 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dlls", "Dlls", "{D8894BD0-3
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WoWBot.WindowsOverlay", "WoWBot.WindowsOverlay\WoWBot.WindowsOverlay.csproj", "{3DFE3700-95D0-47EE-AAE7-7237D9F0DD69}"
 EndProject
+Project("{911E67C6-3D85-4FCE-B560-20A9C3E3FF48}") = "WRobot", "..\..\Users\Toothkiller\Documents\WRobot\WRobot.exe", "{8B1F1BDF-7B7B-48A1-AC6A-C8AB38A5E1E7}"
+	ProjectSection(DebuggerProjectSystem) = preProject
+		PortSupplier = 00000000-0000-0000-0000-000000000000
+		Executable = C:\Users\Toothkiller\Documents\WRobot\WRobot.exe
+		RemoteMachine = DESKTOP-2Q34M3J
+		StartingDirectory = C:\Users\Toothkiller\Documents\WRobot
+		Environment = Default
+		LaunchingEngine = 00000000-0000-0000-0000-000000000000
+		UseLegacyDebugEngines = No
+		LaunchSQLEngine = No
+		AttachLaunchAction = No
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{BB595056-B87E-4B00-9284-410F8CD79F4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BB595056-B87E-4B00-9284-410F8CD79F4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB595056-B87E-4B00-9284-410F8CD79F4F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BB595056-B87E-4B00-9284-410F8CD79F4F}.Debug|x86.Build.0 = Debug|Any CPU
 		{BB595056-B87E-4B00-9284-410F8CD79F4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB595056-B87E-4B00-9284-410F8CD79F4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB595056-B87E-4B00-9284-410F8CD79F4F}.Release|x86.ActiveCfg = Release|Any CPU
+		{BB595056-B87E-4B00-9284-410F8CD79F4F}.Release|x86.Build.0 = Release|Any CPU
 		{B9239DA2-86C7-44E3-9D22-522B78AA334A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B9239DA2-86C7-44E3-9D22-522B78AA334A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9239DA2-86C7-44E3-9D22-522B78AA334A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B9239DA2-86C7-44E3-9D22-522B78AA334A}.Debug|x86.Build.0 = Debug|Any CPU
 		{B9239DA2-86C7-44E3-9D22-522B78AA334A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9239DA2-86C7-44E3-9D22-522B78AA334A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9239DA2-86C7-44E3-9D22-522B78AA334A}.Release|x86.ActiveCfg = Release|Any CPU
+		{B9239DA2-86C7-44E3-9D22-522B78AA334A}.Release|x86.Build.0 = Release|Any CPU
 		{61476A04-81B7-49C7-A0AC-8804D53590D9}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{61476A04-81B7-49C7-A0AC-8804D53590D9}.Debug|Any CPU.Build.0 = Debug|x86
+		{61476A04-81B7-49C7-A0AC-8804D53590D9}.Debug|x86.ActiveCfg = Debug|x86
+		{61476A04-81B7-49C7-A0AC-8804D53590D9}.Debug|x86.Build.0 = Debug|x86
 		{61476A04-81B7-49C7-A0AC-8804D53590D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61476A04-81B7-49C7-A0AC-8804D53590D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61476A04-81B7-49C7-A0AC-8804D53590D9}.Release|x86.ActiveCfg = Release|x86
+		{61476A04-81B7-49C7-A0AC-8804D53590D9}.Release|x86.Build.0 = Release|x86
 		{3DFE3700-95D0-47EE-AAE7-7237D9F0DD69}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{3DFE3700-95D0-47EE-AAE7-7237D9F0DD69}.Debug|Any CPU.Build.0 = Debug|x86
+		{3DFE3700-95D0-47EE-AAE7-7237D9F0DD69}.Debug|x86.ActiveCfg = Debug|x86
+		{3DFE3700-95D0-47EE-AAE7-7237D9F0DD69}.Debug|x86.Build.0 = Debug|x86
 		{3DFE3700-95D0-47EE-AAE7-7237D9F0DD69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DFE3700-95D0-47EE-AAE7-7237D9F0DD69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DFE3700-95D0-47EE-AAE7-7237D9F0DD69}.Release|x86.ActiveCfg = Release|x86
+		{3DFE3700-95D0-47EE-AAE7-7237D9F0DD69}.Release|x86.Build.0 = Release|x86
+		{8B1F1BDF-7B7B-48A1-AC6A-C8AB38A5E1E7}.Debug|Any CPU.ActiveCfg = Release|x86
+		{8B1F1BDF-7B7B-48A1-AC6A-C8AB38A5E1E7}.Debug|x86.ActiveCfg = Release|x86
+		{8B1F1BDF-7B7B-48A1-AC6A-C8AB38A5E1E7}.Release|Any CPU.ActiveCfg = Release|x86
+		{8B1F1BDF-7B7B-48A1-AC6A-C8AB38A5E1E7}.Release|x86.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -58,6 +93,7 @@ Global
 		{61476A04-81B7-49C7-A0AC-8804D53590D9} = {3EBAAC63-F5DA-4104-BF03-862CB9205049}
 		{D8894BD0-3F11-4BFD-A9A8-6444B45FCE76} = {3EBAAC63-F5DA-4104-BF03-862CB9205049}
 		{3DFE3700-95D0-47EE-AAE7-7237D9F0DD69} = {3EBAAC63-F5DA-4104-BF03-862CB9205049}
+		{8B1F1BDF-7B7B-48A1-AC6A-C8AB38A5E1E7} = {3EBAAC63-F5DA-4104-BF03-862CB9205049}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9B0C0886-41C7-4C74-8899-45253667DE41}

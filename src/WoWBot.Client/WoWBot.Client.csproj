@@ -32,7 +32,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\Debug\</OutputPath>
+    <OutputPath>..\..\..\Users\Toothkiller\Documents\WRobot\FightClass\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
@@ -72,15 +72,18 @@
   <ItemGroup>
     <Compile Include="FightClass\BaseClassWithRotation.cs" />
     <Compile Include="FightClass\CharacterDecisionFightClass.cs" />
-    <Compile Include="FightClass\Characters\Priest.cs" />
     <Compile Include="FightClass\Characters\Warlock.cs" />
     <Compile Include="FightClass\Characters\WoWSpell.cs" />
     <Compile Include="FightClass\FightClassSettings.cs" />
     <Compile Include="FightClass\TeamPlayerFactory.cs" />
     <Compile Include="FightClass\Team\Abstract\AbstractTeamHealer.cs" />
     <Compile Include="FightClass\Team\ITeamPlayer.cs" />
+    <Compile Include="FightClass\Team\Priest\PriestHealer.cs" />
+    <Compile Include="FightClass\Team\Priest\PriestTeamPlayer.cs" />
     <Compile Include="FightClass\Team\TeamRole.cs" />
+    <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Helpers\MapDataHelpers.cs" />
+    <Compile Include="Helpers\MonitoredSpell.cs" />
     <Compile Include="Helpers\UnitHelper.cs" />
     <Compile Include="Plugins\PlayerInteractionPlugin.cs" />
     <Compile Include="Profile\CustomProfile.cs" />

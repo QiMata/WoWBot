@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using wManager.Wow.Enums;
 using WoWBot.Client.FightClass.Team;
+using WoWBot.Client.FightClass.Team.Priest;
 
 namespace WoWBot.Client.FightClass
 {
@@ -22,7 +23,7 @@ namespace WoWBot.Client.FightClass
                 case WoWClass.Rogue:
                     break;
                 case WoWClass.Priest:
-                    break;
+                    return new PriestTeamPlayer();
                 case WoWClass.Shaman:
                     break;
                 case WoWClass.Mage:

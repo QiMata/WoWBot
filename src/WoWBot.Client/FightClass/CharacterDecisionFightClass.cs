@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using wManager.Wow.Helpers;
+using WoWBot.Client.FightClass;
 using WoWBot.Client.FightClass.Team;
 
-namespace WoWBot.Client.FightClass
-{
-    public class CharacterDecisionFightClass : ICustomClass
+    public class Main : ICustomClass
     {
         private ICustomClass _customClass;
 
-        private FightClassSettings _fightClassSettings;
+        private FightClassSettings _fightClassSettings = new FightClassSettings
+        {
+            TeamRole = TeamRole.Healer
+        };
 
         public void Initialize()
         {
@@ -51,4 +53,3 @@ namespace WoWBot.Client.FightClass
             }
         }
     }
-}

@@ -2,28 +2,50 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using wManager.Wow.Bot.States;
+using wManager.Wow.ObjectManager;
+using WoWUnit = WoWBot.Common.WoWUnit;
 
 namespace WoWBot.Client.FightClass.Team.Abstract
 {
-    class AbstractTeamHealer : BaseClassWithRotation
+    abstract class AbstractTeamHealer : BaseClassWithRotation
     {
-        public AbstractTeamHealer(float range) : base(range)
+        private readonly float _healthPercentBeforeHealingThreshold;
+
+        protected AbstractTeamHealer(float range, float healthPercentBeforeHealingThreshold) : base(range)
         {
+            _healthPercentBeforeHealingThreshold = healthPercentBeforeHealingThreshold;
         }
 
         protected override void CombatRotation()
         {
-            throw new NotImplementedException();
+            IEnumerable<WoWPlayer> partyMembersNeedHealing = GetPartyMembersNeedHealing();
+            var membersNeedHealing = partyMembersNeedHealing as IList<WoWPlayer> ?? partyMembersNeedHealing.ToList();
+            if (membersNeedHealing.Any())
+            {
+                HealPartyMembers(membersNeedHealing);
+            }
+            else
+            {
+                Attack();
+            }
+        }
+
+        protected abstract void Attack();
+
+        protected abstract void HealPartyMembers(IList<WoWPlayer> membersNeedHealing);
+
+        private IEnumerable<WoWPlayer> GetPartyMembersNeedHealing()
+        {
+            return wManager.Wow.Helpers.Party.GetParty()
+                .Union(new []{ ObjectManager.Me })
+                .Where(x => x.HealthPercent <= _healthPercentBeforeHealingThreshold);
         }
 
         protected override bool TeamInCombat()
         {
-            throw new NotImplementedException();
-        }
-
-        protected override void Buff()
-        {
-            throw new NotImplementedException();
+            //i dunno
+            return wManager.Wow.Helpers.Party.GetParty().Select(x => x.InCombat).Any(x => x);
         }
     }
 }

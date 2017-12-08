@@ -23,7 +23,8 @@ namespace WoWBot.Client.FightClass
         {
             Logging.Write("Started Fight Class: " + GetType().FullName);
             _isLaunched = true;
-            while (_isLaunched)
+            //while (_isLaunched)
+            while (true)
             {
                 Rotation();
             }
@@ -39,10 +40,10 @@ namespace WoWBot.Client.FightClass
                     {
                         ManagePet();
                         Buff();
-                        if (Fight.InFight && TeamInCombat())
-                        {
+                        //if (Fight.InFight && TeamInCombat())
+                        //{
                             CombatRotation();
-                        }
+                        ////}
                     }
                 }
             }
