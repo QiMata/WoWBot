@@ -70,10 +70,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FightClass\BaseClassWithRotation.cs" />
     <Compile Include="FightClass\CharacterDecisionFightClass.cs" />
+    <Compile Include="FightClass\Characters\Priest.cs" />
+    <Compile Include="FightClass\Characters\Warlock.cs" />
+    <Compile Include="FightClass\Characters\WoWSpell.cs" />
+    <Compile Include="FightClass\FightClassSettings.cs" />
+    <Compile Include="FightClass\TeamPlayerFactory.cs" />
+    <Compile Include="FightClass\Team\Abstract\AbstractTeamHealer.cs" />
+    <Compile Include="FightClass\Team\ITeamPlayer.cs" />
+    <Compile Include="FightClass\Team\TeamRole.cs" />
     <Compile Include="Helpers\MapDataHelpers.cs" />
     <Compile Include="Helpers\UnitHelper.cs" />
     <Compile Include="Plugins\PlayerInteractionPlugin.cs" />
+    <Compile Include="Profile\CustomProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

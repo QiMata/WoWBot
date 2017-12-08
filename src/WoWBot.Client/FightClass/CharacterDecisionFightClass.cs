@@ -3,28 +3,52 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using wManager.Wow.Helpers;
+using WoWBot.Client.FightClass.Team;
 
 namespace WoWBot.Client.FightClass
 {
     public class CharacterDecisionFightClass : ICustomClass
     {
-        private ICharacterDecisionEngine _characterDecisionEngine;
+        private ICustomClass _customClass;
+
+        private FightClassSettings _fightClassSettings;
 
         public void Initialize()
         {
-            //Open connection
+            //Get Team Player
+            ITeamPlayer teamPlayer = TeamPlayerFactory.GetByClass(wManager.Wow.ObjectManager.ObjectManager.Me.WowClass);
+
+            //Set custom class
+            _customClass = teamPlayer.GetRotationByTeamRole(_fightClassSettings.TeamRole);
+
+            //init custom class
+            _customClass.Initialize();
         }
 
         public void Dispose()
         {
-            //Close connection
+            //dispose yo class
+            if (_customClass != null)
+            {
+                _customClass.Dispose();
+            }
         }
 
         public void ShowConfiguration()
         {
-            throw new NotImplementedException();
+            //show configuration
         }
 
-        public float Range { get; }
+        public float Range
+        {
+            get
+            {
+                if (_customClass == null)
+                {
+                    return 30;
+                }
+                return _customClass.Range;
+            }
+        }
     }
 }
