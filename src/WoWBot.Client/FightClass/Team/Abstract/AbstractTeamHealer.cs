@@ -31,6 +31,18 @@ namespace WoWBot.Client.FightClass.Team.Abstract
             {
                 Attack();
             }
+
+            if (NeedMana())
+            {
+                Drink();
+            }
+        }
+
+
+
+        protected virtual bool NeedMana()
+        {
+            return wManager.wManagerSetting.CurrentSetting.DrinkPercent <= ObjectManager.Me.ManaPercentage;
         }
 
         protected abstract void Attack();

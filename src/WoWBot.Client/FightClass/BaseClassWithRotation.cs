@@ -67,6 +67,12 @@ namespace WoWBot.Client.FightClass
             _isLaunched = false;
         }
 
+        protected void Drink()
+        {
+            var drinkName = wManager.wManagerSetting.CurrentSetting.DrinkName;
+            wManager.Wow.Helpers.ItemsManager.UseItem(drinkName);
+        }
+
         public void ShowConfiguration()
         {
             
