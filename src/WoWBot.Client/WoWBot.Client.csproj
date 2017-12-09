@@ -52,6 +52,9 @@
     <Reference Include="MemoryRobot">
       <HintPath>..\Dlls\MemoryRobot.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="robotManager">
       <HintPath>..\Dlls\robotManager.dll</HintPath>
     </Reference>
@@ -77,14 +80,20 @@
     <Compile Include="FightClass\FightClassSettings.cs" />
     <Compile Include="FightClass\TeamPlayerFactory.cs" />
     <Compile Include="FightClass\Team\Abstract\AbstractTeamHealer.cs" />
+    <Compile Include="FightClass\Team\Abstract\AbstractTeamTank.cs" />
     <Compile Include="FightClass\Team\ITeamPlayer.cs" />
     <Compile Include="FightClass\Team\Priest\PriestHealer.cs" />
     <Compile Include="FightClass\Team\Priest\PriestTeamPlayer.cs" />
     <Compile Include="FightClass\Team\TeamRole.cs" />
+    <Compile Include="FightClass\Team\Warrior\WarriorTank.cs" />
+    <Compile Include="FightClass\Team\Warrior\WarriorTeamPlayer.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Helpers\MapDataHelpers.cs" />
     <Compile Include="Helpers\MonitoredSpell.cs" />
     <Compile Include="Helpers\UnitHelper.cs" />
+    <Compile Include="Plugins\LoggingPlugin.cs" />
+    <Compile Include="Plugins\Logging\Logger.cs" />
+    <Compile Include="Plugins\Models\MeData.cs" />
     <Compile Include="Plugins\PlayerInteractionPlugin.cs" />
     <Compile Include="Profile\CustomProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -96,5 +105,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

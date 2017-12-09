@@ -14,14 +14,14 @@ namespace WoWBot.Client.FightClass.Team.Priest
     {
         // Buff:
         public MonitoredSpell PowerWordFortitude = new MonitoredSpell("Power Word: Fortitude");
-        public Spell InnerFire = new Spell("Inner Fire");
+        public MonitoredSpell InnerFire = new MonitoredSpell("Inner Fire");
         public MonitoredSpell ShadowProtection = new MonitoredSpell("Shadow Protection");
 
         //Protection:
         public MonitoredSpell PowerWordShield = new MonitoredSpell("Power Word: Shield");
         public MonitoredSpell Renew = new MonitoredSpell("Renew");
-        public MonitoredSpell FlashHeal = new MonitoredSpell("Flash Heal", 1500);
-        public Spell DesperatePrayer = new Spell("Desperate Prayer");
+        public MonitoredSpell FlashHeal = new MonitoredSpell("Lesser Heal", 2000);
+        public MonitoredSpell DesperatePrayer = new MonitoredSpell("Desperate Prayer");
 
         public PriestHealer(float range, float healthPercentBeforeHealingThreshold) : base(range, healthPercentBeforeHealingThreshold)
         {
@@ -29,7 +29,8 @@ namespace WoWBot.Client.FightClass.Team.Priest
 
         protected override void Buff()
         {
-            foreach (var player in wManager.Wow.Helpers.Party.GetParty())
+            ApplyFriendlyBuff(ObjectManager.Me,InnerFire);
+            foreach (var player in wManager.Wow.Helpers.Party.GetParty().Union(new []{ ObjectManager.Me}))
             {
                 BuffPlayer(player);
             }
@@ -37,18 +38,8 @@ namespace WoWBot.Client.FightClass.Team.Priest
 
         private void BuffPlayer(WoWPlayer player)
         {
-            BuffPlayer(player,PowerWordFortitude);
-            BuffPlayer(player, ShadowProtection);
-        }
-
-        private void BuffPlayer(WoWPlayer player, MonitoredSpell spell)
-        {
-            player.TargetPlayer();
-            if (!wManager.Wow.ObjectManager.ObjectManager.Target.HaveBuff(spell.Name)
-                && player.GetDistance < spell.MaxRange)
-            {
-                spell.Cast();
-            }
+            ApplyFriendlyBuff(player,PowerWordFortitude);
+            ApplyFriendlyBuff(player, ShadowProtection);
         }
 
         protected override void Attack()
@@ -67,8 +58,7 @@ namespace WoWBot.Client.FightClass.Team.Priest
                 }
                 if (woWPlayer.HealthPercent < 80)
                 {
-                    woWPlayer.TargetPlayer();
-                    Renew.Cast();
+                    ApplyFriendlyBuff(woWPlayer, Renew);
                 }
                 if (woWPlayer.HealthPercent < 50)
                 {

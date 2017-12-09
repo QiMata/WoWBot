@@ -12,5 +12,10 @@ namespace WoWBot.Client.Helpers
         {
             wManager.Wow.Helpers.Interact.InteractGameObject(player.GetBaseAddress);
         }
+
+        public static void TargetEnemy(this WoWUnit woWUnit)
+        {
+            wManager.Wow.Helpers.Interact.InteractGameObject(woWUnit.GetBaseAddress);
+        }
     }
 }

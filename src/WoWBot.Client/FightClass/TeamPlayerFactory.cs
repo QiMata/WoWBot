@@ -5,6 +5,7 @@ using System.Text;
 using wManager.Wow.Enums;
 using WoWBot.Client.FightClass.Team;
 using WoWBot.Client.FightClass.Team.Priest;
+using WoWBot.Client.FightClass.Team.Warrior;
 
 namespace WoWBot.Client.FightClass
 {
@@ -15,7 +16,7 @@ namespace WoWBot.Client.FightClass
             switch (wowClass)
             {
                 case WoWClass.Warrior:
-                    break;
+                    return new WarriorTeamPlayer();
                 case WoWClass.Paladin:
                     break;
                 case WoWClass.Hunter:

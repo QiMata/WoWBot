@@ -5,7 +5,7 @@ using System.Text;
 
 namespace WoWBot.Client.FightClass.Team
 {
-    enum TeamRole
+    public enum TeamRole
     {
         Unknown = 0,
         Tank = 1,

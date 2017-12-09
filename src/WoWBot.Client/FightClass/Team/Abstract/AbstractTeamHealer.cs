@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using wManager.Wow.Bot.States;
+using wManager.Wow.Class;
 using wManager.Wow.ObjectManager;
+using WoWBot.Client.Helpers;
 using WoWUnit = WoWBot.Common.WoWUnit;
 
 namespace WoWBot.Client.FightClass.Team.Abstract
@@ -46,6 +48,21 @@ namespace WoWBot.Client.FightClass.Team.Abstract
         {
             //i dunno
             return wManager.Wow.Helpers.Party.GetParty().Select(x => x.InCombat).Any(x => x);
+        }
+
+        public void ApplyFriendlyBuff(WoWPlayer player, MonitoredSpell spell, string buffName = null)
+        {
+            if (buffName == null)
+            {
+                buffName = spell.Name;
+            }
+
+            if (spell.KnownSpell && !player.HaveBuff(buffName)
+                && player.GetDistance < spell.MaxRange)
+            {
+                player.TargetPlayer();
+                spell.Cast();
+            }
         }
     }
 }

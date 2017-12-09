@@ -40,10 +40,7 @@ namespace WoWBot.Client.FightClass
                     {
                         ManagePet();
                         Buff();
-                        //if (Fight.InFight && TeamInCombat())
-                        //{
-                            CombatRotation();
-                        ////}
+                        CombatRotation();
                     }
                 }
             }
