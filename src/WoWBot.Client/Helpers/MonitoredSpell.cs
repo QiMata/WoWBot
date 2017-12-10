@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using wManager.Wow.Class;
+using wManager.Wow.ObjectManager;
 
 namespace WoWBot.Client.Helpers
 {
@@ -70,11 +71,14 @@ namespace WoWBot.Client.Helpers
         public void Cast(bool stopMove = true)
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
+            if (IsDistanceGood && KnownSpell && !CooldownEnabled)
             Launch(stopMove);
             while (stopwatch.ElapsedMilliseconds < _castTime.TotalMilliseconds)
             {
                 Thread.Sleep(100);
             }
         }
+
+        public bool CooldownEnabled => ObjectManager.Me.CooldownEnabled(Id);
     }
 }

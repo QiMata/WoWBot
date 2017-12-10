@@ -10,13 +10,7 @@ namespace WoWBot.Client.FightClass.Team.Priest
     {
         public ICustomClass GetRotationByTeamRole(TeamRole teamRole)
         {
-            switch (teamRole)
-            {
-                case TeamRole.Healer:
-                    return new PriestHealer(30,80);
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(teamRole), teamRole, null);
-            }
+            return new PriestHealer(30, 80);
         }
     }
 }

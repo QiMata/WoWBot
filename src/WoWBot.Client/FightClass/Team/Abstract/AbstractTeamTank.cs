@@ -23,7 +23,6 @@ namespace WoWBot.Client.FightClass.Team.Abstract
             {
                 if (LooseMob())
                 {
-                    Logging.WriteDebug("Loose Mob Detected");
                     GatherLooseMobs();
                 }
                 else
@@ -65,10 +64,8 @@ namespace WoWBot.Client.FightClass.Team.Abstract
         {
             get
             {
-                return wManager.Wow.ObjectManager.ObjectManager.GetObjectWoWUnit()
-                 .Where(x => x.InCombat &&
-                 Party.GetParty()
-                 .Any(z => z.Guid == x.Target));
+                return ObjectManager.GetWoWUnitHostile()
+                 .Where(x => x.IsTargetingPartyMember);
             }
         }
 

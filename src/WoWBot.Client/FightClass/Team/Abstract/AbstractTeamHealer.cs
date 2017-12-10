@@ -21,6 +21,11 @@ namespace WoWBot.Client.FightClass.Team.Abstract
 
         protected override void CombatRotation()
         {
+            if (ObjectManager.GetWoWUnitHostile().Any(x => x.IsTargetingMe))
+            {
+                HandleBeingTarget();
+            }
+
             IEnumerable<WoWPlayer> partyMembersNeedHealing = GetPartyMembersNeedHealing();
             var membersNeedHealing = partyMembersNeedHealing as IList<WoWPlayer> ?? partyMembersNeedHealing.ToList();
             if (membersNeedHealing.Any())
@@ -38,11 +43,12 @@ namespace WoWBot.Client.FightClass.Team.Abstract
             }
         }
 
+        protected abstract void HandleBeingTarget();
 
 
         protected virtual bool NeedMana()
         {
-            return wManager.wManagerSetting.CurrentSetting.DrinkPercent <= ObjectManager.Me.ManaPercentage;
+            return ObjectManager.Me.ManaPercentage < 60;
         }
 
         protected abstract void Attack();
@@ -62,19 +68,6 @@ namespace WoWBot.Client.FightClass.Team.Abstract
             return wManager.Wow.Helpers.Party.GetParty().Select(x => x.InCombat).Any(x => x);
         }
 
-        public void ApplyFriendlyBuff(WoWPlayer player, MonitoredSpell spell, string buffName = null)
-        {
-            if (buffName == null)
-            {
-                buffName = spell.Name;
-            }
-
-            if (spell.KnownSpell && !player.HaveBuff(buffName)
-                && player.GetDistance < spell.MaxRange)
-            {
-                player.TargetPlayer();
-                spell.Cast();
-            }
-        }
+        
     }
 }

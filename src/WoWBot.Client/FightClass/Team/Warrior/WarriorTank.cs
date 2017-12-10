@@ -56,6 +56,10 @@ namespace WoWBot.Client.FightClass.Team.Warrior
                     closestLooseMob.TargetEnemy();
                     MovementManager.Face(closestLooseMob);
                     MovementManager.MoveTo(closestLooseMob);
+                    if (_taunt.CooldownEnabled)
+                    {
+                        break;
+                    }
                     _taunt.Cast();
                 }
             }

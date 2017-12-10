@@ -16,6 +16,7 @@ namespace WoWBot.Client.FightClass.Team.Priest
         public MonitoredSpell PowerWordFortitude = new MonitoredSpell("Power Word: Fortitude");
         public MonitoredSpell InnerFire = new MonitoredSpell("Inner Fire");
         public MonitoredSpell ShadowProtection = new MonitoredSpell("Shadow Protection");
+        public MonitoredSpell Fade = new MonitoredSpell("Fade");
 
         //Protection:
         public MonitoredSpell PowerWordShield = new MonitoredSpell("Power Word: Shield");
@@ -47,11 +48,16 @@ namespace WoWBot.Client.FightClass.Team.Priest
             
         }
 
+        protected override void HandleBeingTarget()
+        {
+            Fade.Cast(false);
+        }
+
         protected override void HealPartyMembers(IList<WoWPlayer> membersNeedHealing)
         {
             foreach (var woWPlayer in membersNeedHealing)
             {
-                if (woWPlayer.HealthPercent < 80)
+                if (woWPlayer.HealthPercent < 80 && !woWPlayer.HaveBuff("Weakened Soul"))
                 {
                     woWPlayer.TargetPlayer();
                     PowerWordShield.Cast();
