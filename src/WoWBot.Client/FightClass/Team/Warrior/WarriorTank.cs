@@ -13,7 +13,7 @@ namespace WoWBot.Client.FightClass.Team.Warrior
     class WarriorTank : Abstract.AbstractTeamTank
     {
         private MonitoredSpell _sunderArmor = new MonitoredSpell("Sunder Armor");
-        private MonitoredSpell _shieldSlam = new MonitoredSpell("Shield Slam");
+        private MonitoredSpell _shieldBash = new MonitoredSpell("Shield Bash");
         private MonitoredSpell _taunt = new MonitoredSpell("Taunt");
 
         public WarriorTank(float range) : base(range)
@@ -36,7 +36,7 @@ namespace WoWBot.Client.FightClass.Team.Warrior
         {
             if (ObjectManager.Me.TargetObject.IsCast)
             {
-                _shieldSlam.Cast(false);
+                _shieldBash.Cast(false);
             }
             _sunderArmor.Cast();
         }
@@ -54,8 +54,10 @@ namespace WoWBot.Client.FightClass.Team.Warrior
                 while (stopwatch.Elapsed < TimeSpan.FromSeconds(5))
                 {
                     closestLooseMob.TargetEnemy();
+
                     MovementManager.Face(closestLooseMob);
                     MovementManager.MoveTo(closestLooseMob);
+
                     if (_taunt.CooldownEnabled)
                     {
                         break;

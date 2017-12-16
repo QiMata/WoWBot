@@ -12,10 +12,13 @@ public class Main : ICustomClass
 {
     private ICustomClass _customClass;
 
-    private readonly FightClassSettings _fightClassSettings = new FightClassSettings();
+    private FightClassSettings _fightClassSettings;
 
     public void Initialize()
     {
+        FightClassSettings.Load();
+
+        _fightClassSettings = FightClassSettings.CurrentSetting;
         //Get Team Player
         ITeamPlayer teamPlayer = TeamPlayerFactory.GetByClass(wManager.Wow.ObjectManager.ObjectManager.Me.WowClass);
 

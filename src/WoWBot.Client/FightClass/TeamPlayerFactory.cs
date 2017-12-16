@@ -13,6 +13,7 @@ namespace WoWBot.Client.FightClass
     {
         public static ITeamPlayer GetByClass(wManager.Wow.Enums.WoWClass wowClass)
         {
+            Console.Write(wowClass);
             switch (wowClass)
             {
                 case WoWClass.Warrior:
