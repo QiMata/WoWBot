@@ -49,6 +49,21 @@ namespace WoWBot.Client.FightClass.Team.Abstract
             }
         }
 
+        private bool TargetInRange()
+        {
+            var closestHostile = ObjectManager.GetWoWUnitHostile()
+                .Where(x => !x.IsDead)
+                .OrderBy(x => x.GetDistance)
+                .FirstOrDefault();
+
+            if (closestHostile == null)
+            {
+                return false;
+            }
+
+            return closestHostile.GetDistance < 30;
+        }
+
         protected abstract void PullNextMob();
 
         protected abstract void TankRotation();

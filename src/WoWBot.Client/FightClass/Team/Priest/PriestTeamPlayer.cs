@@ -10,7 +10,7 @@ namespace WoWBot.Client.FightClass.Team.Priest
     {
         public ICustomClass GetRotationByTeamRole(TeamRole teamRole)
         {
-            return new PriestHealer(30, 80);
+            return new PriestHealer(30);
         }
     }
 }

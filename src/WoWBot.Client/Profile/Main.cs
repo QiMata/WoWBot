@@ -5,11 +5,7 @@ using System.Text;
 
 namespace WoWBot.Client.Profile
 {
-    class CustomProfile : wManager.Wow.Helpers.SpellListManager
+    class Main
     {
-        public CustomProfile()
-        {
-            
-        }
     }
 }

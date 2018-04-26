@@ -4,6 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using robotManager.Helpful;
+using robotManager.Products;
+using wManager.Wow.Enums;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 using WoWBot.Client.Helpers;
@@ -13,23 +16,41 @@ namespace WoWBot.Client.FightClass.Team.Warrior
     class WarriorTank : Abstract.AbstractTeamTank
     {
         private MonitoredSpell _sunderArmor = new MonitoredSpell("Sunder Armor");
-        private MonitoredSpell _shieldSlam = new MonitoredSpell("Shield Slam");
+        private MonitoredSpell _shieldSlam = new MonitoredSpell("Shield Bash");
         private MonitoredSpell _taunt = new MonitoredSpell("Taunt");
+        private MonitoredSpell _revenge = new MonitoredSpell("Revenge");
+        private MonitoredSpell _bloodRage = new MonitoredSpell("Bloodrage");
+        private MonitoredSpell DefensiveStance = new MonitoredSpell("Defensive Stance");
+
+
 
         public WarriorTank(float range) : base(range)
         {
         }
 
+        protected override void Buff()
+        {
+            base.Buff();
+            DefensiveStance.Cast();
+        }
+
         protected override void PullNextMob()
         {
-            while (ObjectManager.Me.TargetObject == null)
+            var closestHostile = ObjectManager.GetWoWUnitHostile()
+                .Where(x => !x.IsDead &&
+                !TraceLine.TraceLineGo(ObjectManager.Me.Position, x.Position,CGWorldFrameHitFlags.HitTestSpellLoS))
+                .OrderBy(x => x.GetDistance2D)
+                .FirstOrDefault();
+
+            if (closestHostile == null)
             {
-                Thread.Sleep(100);
+                return;
             }
-            while (!ObjectManager.Me.InCombat)
-            {
-                Thread.Sleep(100);
-            }
+            
+            closestHostile.TargetEnemy();
+            MovementManager.Face(closestHostile);
+            MovementManager.StopMove();
+            SpellManager.CastSpellByNameLUA("Shoot Crossbow");
         }
 
         protected override void TankRotation()
@@ -38,6 +59,7 @@ namespace WoWBot.Client.FightClass.Team.Warrior
             {
                 _shieldSlam.Cast(false);
             }
+            _revenge.Cast();
             _sunderArmor.Cast();
         }
 

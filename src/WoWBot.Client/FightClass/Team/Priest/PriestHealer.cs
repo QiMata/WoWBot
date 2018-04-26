@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using robotManager.Helpful;
 using wManager.Wow.Class;
+using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 using WoWBot.Client.FightClass.Team.Abstract;
 using WoWBot.Client.Helpers;
@@ -24,16 +25,20 @@ namespace WoWBot.Client.FightClass.Team.Priest
         public MonitoredSpell FlashHeal = new MonitoredSpell("Lesser Heal", 2000);
         public MonitoredSpell DesperatePrayer = new MonitoredSpell("Desperate Prayer");
 
-        public PriestHealer(float range, float healthPercentBeforeHealingThreshold) : base(range, healthPercentBeforeHealingThreshold)
+        public PriestHealer(float range) : base(range)
         {
         }
 
         protected override void Buff()
         {
-            ApplyFriendlyBuff(ObjectManager.Me,InnerFire);
-            foreach (var player in wManager.Wow.Helpers.Party.GetParty().Union(new []{ ObjectManager.Me}))
+            if (!ObjectManager.Me.InCombat)
             {
-                BuffPlayer(player);
+                Logging.WriteDebug("Buff");
+                ApplyFriendlyBuff(ObjectManager.Me, InnerFire);
+                foreach (var player in Party.GetParty().Union(new[] {ObjectManager.Me}))
+                {
+                    BuffPlayer(player);
+                }
             }
         }
 
@@ -45,32 +50,50 @@ namespace WoWBot.Client.FightClass.Team.Priest
 
         protected override void Attack()
         {
-            
+            Logging.WriteDebug("Attack");
         }
 
         protected override void HandleBeingTarget()
         {
+            Logging.WriteDebug("HandleBeingTarget");
             Fade.Cast(false);
         }
 
-        protected override void HealPartyMembers(IList<WoWPlayer> membersNeedHealing)
+        protected override void HealPartyMembers()
         {
-            foreach (var woWPlayer in membersNeedHealing)
+            try
             {
-                if (woWPlayer.HealthPercent < 80 && !woWPlayer.HaveBuff("Weakened Soul"))
+                Logging.WriteDebug("HealPartyMembers");
+                var woWPlayer = Helpers.Extensions.GetParty().OrderBy(x => x.HealthPercent)
+                    .FirstOrDefault();
+
+                if (woWPlayer == null)
                 {
+                    return;
+                }
+
+                if (woWPlayer.HealthPercent < 30 && !woWPlayer.HaveBuff("Weakened Soul"))
+                {
+                    Logging.WriteDebug("Power Word Shield");
                     woWPlayer.TargetPlayer();
                     PowerWordShield.Cast();
                 }
-                if (woWPlayer.HealthPercent < 80)
-                {
-                    ApplyFriendlyBuff(woWPlayer, Renew);
-                }
                 if (woWPlayer.HealthPercent < 50)
                 {
+                    Logging.WriteDebug("Flash Heal");
                     woWPlayer.TargetPlayer();
                     FlashHeal.Cast();
                 }
+                if (woWPlayer.HealthPercent < 80)
+                {
+                    Logging.WriteDebug("Renew");
+                    ApplyFriendlyBuff(woWPlayer, Renew);
+                }
+            }
+            catch (Exception e)
+            {
+                Logging.WriteError(e.Message);
+                throw;
             }
         }
     }

@@ -10,7 +10,7 @@ namespace WoWBot.Client.FightClass.Team.Warrior
     {
         public ICustomClass GetRotationByTeamRole(TeamRole teamRole)
         {
-            return new WarriorTank(5);
+            return new WarriorTank(7);
         }
     }
 }

@@ -50,7 +50,7 @@ namespace WoWBot.Client.FightClass
             {
                 Logging.WriteError("Lock FC  ERROR: " + e);
             }
-            Thread.Sleep(100);
+            Thread.Sleep(10);
         }
 
         protected abstract void CombatRotation();
@@ -107,6 +107,6 @@ namespace WoWBot.Client.FightClass
             
         }
 
-        public float Range { get; }
+        public float Range { get; protected set; }
     }
 }
