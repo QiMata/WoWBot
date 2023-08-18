@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 
@@ -11,12 +8,12 @@ namespace WoWBot.Client.Helpers
     {
         public static void TargetPlayer(this WoWPlayer player)
         {
-            wManager.Wow.Helpers.Interact.InteractGameObject(player.GetBaseAddress);
+            Interact.InteractGameObject(player.GetBaseAddress);
         }
 
         public static void TargetEnemy(this WoWUnit woWUnit)
         {
-            wManager.Wow.Helpers.Interact.InteractGameObject(woWUnit.GetBaseAddress);
+            Interact.InteractGameObject(woWUnit.GetBaseAddress);
         }
 
         private static IEnumerable<WoWPlayer> _party;

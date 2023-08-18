@@ -9,9 +9,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WoWBot.Client</RootNamespace>
     <AssemblyName>WoWBot.Client</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,15 +32,17 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>G:\Wow Bot\WRobot\FightClass\</OutputPath>
+    <OutputPath>E:\repos\WRobot\FightClass\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -47,8 +52,12 @@
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Custom Profile">
+      <HintPath>..\Dlls\Custom Profile.dll</HintPath>
+    </Reference>
     <Reference Include="MemoryRobot">
       <HintPath>..\Dlls\MemoryRobot.dll</HintPath>
     </Reference>
@@ -60,6 +69,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -75,27 +85,67 @@
   <ItemGroup>
     <Compile Include="FightClass\BaseClassWithRotation.cs" />
     <Compile Include="FightClass\CharacterDecisionFightClass.cs" />
-    <Compile Include="FightClass\Characters\Warlock.cs" />
-    <Compile Include="FightClass\Characters\WoWSpell.cs" />
+    <Compile Include="FightClass\Team\Shaman\BaseShaman.cs" />
+    <Compile Include="FightClass\Team\Warlock\WarlockDPS.cs" />
     <Compile Include="FightClass\FightClassSettings.cs" />
     <Compile Include="FightClass\TeamPlayerFactory.cs" />
+    <Compile Include="FightClass\Team\Abstract\AbstractTeamDPS.cs" />
     <Compile Include="FightClass\Team\Abstract\AbstractTeamHealer.cs" />
     <Compile Include="FightClass\Team\Abstract\AbstractTeamTank.cs" />
     <Compile Include="FightClass\Team\ITeamPlayer.cs" />
+    <Compile Include="FightClass\Team\Hunter\HunterDPS.cs" />
+    <Compile Include="FightClass\Team\Hunter\HunterTeamPlayer.cs" />
+    <Compile Include="FightClass\Team\Warlock\WarlockTeamPlayer.cs" />
+    <Compile Include="FightClass\Team\Rogue\RogueDPS.cs" />
+    <Compile Include="FightClass\Team\Rogue\RogueTeamPlayer.cs" />
+    <Compile Include="FightClass\Team\Mage\MageDPS.cs" />
+    <Compile Include="FightClass\Team\Mage\MageTeamPlayer.cs" />
+    <Compile Include="FightClass\Team\Druid\DruidDPS.cs" />
+    <Compile Include="FightClass\Team\Druid\DruidHealer.cs" />
+    <Compile Include="FightClass\Team\Druid\DruidTank.cs" />
+    <Compile Include="FightClass\Team\Druid\DruidTeamPlayer.cs" />
+    <Compile Include="FightClass\Team\Paladin\PaladinHealer.cs" />
+    <Compile Include="FightClass\Team\Priest\PriestDPS.cs" />
     <Compile Include="FightClass\Team\Priest\PriestHealer.cs" />
     <Compile Include="FightClass\Team\Priest\PriestTeamPlayer.cs" />
+    <Compile Include="FightClass\Team\Shaman\ShamanDPS.cs" />
+    <Compile Include="FightClass\Team\Shaman\ShamanHealer.cs" />
+    <Compile Include="FightClass\Team\Shaman\ShamanTeamPlayer.cs" />
     <Compile Include="FightClass\Team\TeamRole.cs" />
+    <Compile Include="FightClass\Team\Paladin\PaladinDPS.cs" />
+    <Compile Include="FightClass\Team\Paladin\PaladinTank.cs" />
+    <Compile Include="FightClass\Team\Paladin\PaladinTeamPlayer.cs" />
+    <Compile Include="FightClass\Team\Warrior\WarriorDPS.cs" />
     <Compile Include="FightClass\Team\Warrior\WarriorTank.cs" />
     <Compile Include="FightClass\Team\Warrior\WarriorTeamPlayer.cs" />
+    <Compile Include="FSM\AdvQstFSM.cs" />
+    <Compile Include="FSM\States\Learning.cs" />
+    <Compile Include="FSM\States\Navigate.cs" />
+    <Compile Include="FSM\States\Questing.cs" />
+    <Compile Include="FSM\States\Targeting.cs" />
+    <Compile Include="FSM\States\Vendoring.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Helpers\MapDataHelpers.cs" />
     <Compile Include="Helpers\MonitoredSpell.cs" />
     <Compile Include="Helpers\UnitHelper.cs" />
+    <Compile Include="NpcBase\FlightManager.cs" />
+    <Compile Include="NpcBase\Npc.cs" />
+    <Compile Include="NpcBase\QuestGiver.cs" />
+    <Compile Include="NpcBase\Repair.cs" />
+    <Compile Include="NpcBase\Trainer.cs" />
+    <Compile Include="NpcBase\Vendor.cs" />
     <Compile Include="Plugins\LoggingPlugin.cs" />
     <Compile Include="Plugins\Logging\Logger.cs" />
     <Compile Include="Plugins\Models\MeData.cs" />
     <Compile Include="Plugins\PlayerInteractionPlugin.cs" />
+    <Compile Include="Profile\CustomProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Quest\QuestBoard.cs" />
+    <Compile Include="Quest\QuestBundle.cs" />
+    <Compile Include="Quest\QuestTask.cs" />
+    <Compile Include="TestQuests\CuttingTeeth.cs" />
+    <Compile Include="TestQuests\YourPlaceInTheWorld.cs" />
+    <Compile Include="Util\LinqExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\WoWBot.Common.csproj">
@@ -104,11 +154,21 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Profile\" />
+    <Folder Include="FightClass\Characters\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\Microsoft.NETFramework.ReferenceAssemblies.net40.1.0.3\build\Microsoft.NETFramework.ReferenceAssemblies.net40.targets" Condition="Exists('..\packages\Microsoft.NETFramework.ReferenceAssemblies.net40.1.0.3\build\Microsoft.NETFramework.ReferenceAssemblies.net40.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.NETFramework.ReferenceAssemblies.net40.1.0.3\build\Microsoft.NETFramework.ReferenceAssemblies.net40.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.NETFramework.ReferenceAssemblies.net40.1.0.3\build\Microsoft.NETFramework.ReferenceAssemblies.net40.targets'))" />
+  </Target>
+  <PropertyGroup>
+    <PostBuildEvent>copy /Y "$(TargetDir)$(TargetName).dll" "E:\repos\WRobot\Profiles\Custom Profile\$(TargetName).dll"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

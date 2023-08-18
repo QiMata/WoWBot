@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using robotManager.Helpful;
-using robotManager.Products;
 using wManager.Wow.Enums;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
@@ -85,6 +80,11 @@ namespace WoWBot.Client.FightClass.Team.Warrior
                     _taunt.Cast();
                 }
             }
+        }
+
+        protected override void OptimizeGear()
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using wManager.Wow.Class;
 using wManager.Wow.ObjectManager;
@@ -72,7 +69,10 @@ namespace WoWBot.Client.Helpers
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
             if (IsDistanceGood && KnownSpell && !CooldownEnabled)
-            Launch(stopMove);
+            {
+                Launch(stopMove);
+            }
+
             while (stopwatch.ElapsedMilliseconds < _castTime.TotalMilliseconds)
             {
                 Thread.Sleep(100);

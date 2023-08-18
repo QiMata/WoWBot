@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2003
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33801.468
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WoWBot.Common", "Common\WoWBot.Common.csproj", "{BB595056-B87E-4B00-9284-410F8CD79F4F}"
 EndProject
@@ -17,6 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WoWBot.Client", "WoWBot.Cli
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dlls", "Dlls", "{D8894BD0-3F11-4BFD-A9A8-6444B45FCE76}"
 	ProjectSection(SolutionItems) = preProject
+		Dlls\Custom Profile.dll = Dlls\Custom Profile.dll
 		Dlls\MemoryRobot.dll = Dlls\MemoryRobot.dll
 		Dlls\MissingFiles.txt = Dlls\MissingFiles.txt
 		Dlls\robotManager.dll = Dlls\robotManager.dll
@@ -26,17 +27,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dlls", "Dlls", "{D8894BD0-3
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WoWBot.WindowsOverlay", "WoWBot.WindowsOverlay\WoWBot.WindowsOverlay.csproj", "{3DFE3700-95D0-47EE-AAE7-7237D9F0DD69}"
 EndProject
-Project("{911E67C6-3D85-4FCE-B560-20A9C3E3FF48}") = "WRobot", "..\..\..\..\..\Program Files\WRobot\WRobot.exe", "{DF2A8C8E-456C-4DAF-8FBB-18652D5B9CCC}"
+Project("{911E67C6-3D85-4FCE-B560-20A9C3E3FF48}") = "WRobot", "..\..\..\Program Files\WRobot\WRobot.exe", "{DF2A8C8E-456C-4DAF-8FBB-18652D5B9CCC}"
 	ProjectSection(DebuggerProjectSystem) = preProject
 		PortSupplier = 00000000-0000-0000-0000-000000000000
-		Executable = C:\Program Files (x86)\WRobot\WRobot.exe
+		Executable = E:\repos\WRobot\WRobot.exe
 		RemoteMachine = DESKTOP-H65VJ8M
-		StartingDirectory = C:\Program Files (x86)\WRobot
+		StartingDirectory = E:\repos\WRobot
 		Environment = Default
 		LaunchingEngine = 00000000-0000-0000-0000-000000000000
 		UseLegacyDebugEngines = No
 		LaunchSQLEngine = No
 		AttachLaunchAction = No
+		IORedirection = Auto
 	EndProjectSection
 EndProject
 Global

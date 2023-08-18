@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using robotManager.Helpful;
+﻿using robotManager.Helpful;
 using wManager.Wow.Enums;
 using WoWBot.Playerstate;
 

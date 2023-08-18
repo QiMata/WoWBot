@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using robotManager.Helpful;
 using robotManager.Products;
@@ -24,8 +21,7 @@ namespace WoWBot.Client.FightClass
         {
             Logging.Write("Started Fight Class: " + GetType().FullName);
             _isLaunched = true;
-            //while (_isLaunched)
-            while (true)
+            while (_isLaunched)
             {
                 Rotation();
             }
@@ -36,13 +32,17 @@ namespace WoWBot.Client.FightClass
         {
             try
             {
-                if (!Products.InPause)
+                if (Products.IsStarted)
                 {
                     if (!ObjectManager.Me.IsDeadMe)
                     {
                         ManagePet();
                         Buff();
-                        CombatRotation();
+
+                        if (ObjectManager.Me.TargetObject.IsAttackable && ObjectManager.Me.TargetObject.GetDistance < Range)
+                        {
+                            CombatRotation();
+                        }
                     }
                 }
             }
@@ -58,10 +58,11 @@ namespace WoWBot.Client.FightClass
         protected abstract bool TeamInCombat();
 
         protected abstract void Buff();
+        protected abstract void OptimizeGear();
 
         protected virtual void ManagePet()
         {
-            
+
         }
 
         public void Dispose()
@@ -76,7 +77,7 @@ namespace WoWBot.Client.FightClass
             {
                 if (!ObjectManager.Me.HaveBuff("Drink"))
                 {
-                    wManager.Wow.Helpers.ItemsManager.UseItem(drinkName);
+                    ItemsManager.UseItem(drinkName);
                 }
                 Thread.Sleep(100);
             } while (NeedMana());
@@ -104,7 +105,7 @@ namespace WoWBot.Client.FightClass
 
         public void ShowConfiguration()
         {
-            
+
         }
 
         public float Range { get; protected set; }

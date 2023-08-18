@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using robotManager.Helpful;
 using robotManager.Products;
 using wManager.Wow.Helpers;
-using wManager.Wow.Helpers.FightClassCreator;
 using wManager.Wow.ObjectManager;
 
 namespace WoWBot.Client.FightClass.Team.Abstract

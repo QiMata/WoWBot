@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace WoWBot.Client.Profile
+namespace AdvancedQuester.FSM.States
 {
-    class Main
+    class Targeting
     {
     }
 }

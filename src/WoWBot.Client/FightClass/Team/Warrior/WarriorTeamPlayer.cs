@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using wManager.Wow.Helpers;
+﻿using wManager.Wow.Helpers;
 
 namespace WoWBot.Client.FightClass.Team.Warrior
 {
-    class WarriorTeamPlayer : ITeamPlayer
+    class PaladinTeamPlayer : ITeamPlayer
     {
         public ICustomClass GetRotationByTeamRole(TeamRole teamRole)
         {

@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using robotManager.Helpful;
-using wManager.Wow.Class;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 using WoWBot.Client.FightClass.Team.Abstract;
@@ -95,6 +92,11 @@ namespace WoWBot.Client.FightClass.Team.Priest
                 Logging.WriteError(e.Message);
                 throw;
             }
+        }
+
+        protected override void OptimizeGear()
+        {
+            throw new NotImplementedException();
         }
     }
 }

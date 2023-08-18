@@ -22,7 +22,14 @@ namespace WoWBot.Client.FightClass
 
         FightClassSettings()
         {
-            ConfigWinForm(new System.Drawing.Point(400, 400), "FightClass " + Translate.Get("Settings"));
+            try
+            {
+                ConfigWinForm(new System.Drawing.Point(400, 400), "FightClass " + Translate.Get("Settings"));
+            }
+            catch (Exception ex)
+            {
+                Logging.WriteError("FightClassSettings &gt; Constructor(): " + ex);
+            }
         }
 
         public bool Save()

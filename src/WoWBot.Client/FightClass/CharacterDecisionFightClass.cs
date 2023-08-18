@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using wManager.Wow.Helpers;
+﻿using wManager.Wow.Helpers;
 using WoWBot.Client.FightClass;
 using WoWBot.Client.FightClass.Team;
 
@@ -16,9 +10,12 @@ public class Main : ICustomClass
 
     public void Initialize()
     {
-        FightClassSettings.Load();
+        if (_fightClassSettings == null)
+        {
+            FightClassSettings.Load();
 
-        _fightClassSettings = FightClassSettings.CurrentSetting;
+            _fightClassSettings = FightClassSettings.CurrentSetting;
+        }
         //Get Team Player
         ITeamPlayer teamPlayer = TeamPlayerFactory.GetByClass(wManager.Wow.ObjectManager.ObjectManager.Me.WowClass);
 
@@ -28,7 +25,6 @@ public class Main : ICustomClass
         //init custom class
         _customClass.Initialize();
     }
-
     public void Dispose()
     {
         //dispose yo class
@@ -40,6 +36,12 @@ public class Main : ICustomClass
 
     public void ShowConfiguration()
     {
+        if (_fightClassSettings == null)
+        {
+            FightClassSettings.Load();
+
+            _fightClassSettings = FightClassSettings.CurrentSetting;
+        }
         //show configuration
         _fightClassSettings.ToForm();
     }

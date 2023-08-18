@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using wManager.Wow.Bot.States;
-using wManager.Wow.Class;
-using wManager.Wow.ObjectManager;
-using WoWBot.Client.Helpers;
-using WoWUnit = WoWBot.Common.WoWUnit;
+﻿using System.Linq;
 
 namespace WoWBot.Client.FightClass.Team.Abstract
 {
@@ -16,6 +8,17 @@ namespace WoWBot.Client.FightClass.Team.Abstract
         protected AbstractTeamDPS(float range) : base(range)
         {
 
+        }
+        protected abstract void HandleBeingTarget();
+
+        protected abstract void Attack();
+
+        protected abstract void HealPartyMembers();
+
+        protected override bool TeamInCombat()
+        {
+            //i dunno
+            return wManager.Wow.Helpers.Party.GetParty().Select(x => x.InCombat).Any(x => x);
         }
     }
 }

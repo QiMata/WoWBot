@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using wManager.Wow.Helpers;
+﻿using wManager.Wow.Helpers;
 
 namespace WoWBot.Client.FightClass.Team.Priest
 {
@@ -10,6 +6,11 @@ namespace WoWBot.Client.FightClass.Team.Priest
     {
         public ICustomClass GetRotationByTeamRole(TeamRole teamRole)
         {
+            switch (teamRole)
+            {
+                case TeamRole.Healer: return new PriestHealer(30);
+                case TeamRole.Dps: return new PriestDPS(5);
+            }
             return new PriestHealer(30);
         }
     }

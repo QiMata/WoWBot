@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using wManager.Wow.Class;
-using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 using WoWBot.Client.Helpers;
 
@@ -41,12 +35,6 @@ namespace WoWBot.Client.FightClass.Team.Warrior
         public WarriorDPS(float range) : base(range)
         {
         }
-
-        protected override void Buff()
-        {
-            throw new NotImplementedException();
-        }
-
         protected override void CombatRotation()
         {
             if (_execute.KnownSpell && ObjectManager.Target.HealthPercent < 20)
@@ -86,7 +74,33 @@ namespace WoWBot.Client.FightClass.Team.Warrior
             }
         }
 
+        protected override void Attack()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void Buff()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        protected override void HandleBeingTarget()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void HealPartyMembers()
+        {
+            throw new NotImplementedException();
+        }
+
         protected override bool TeamInCombat()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void OptimizeGear()
         {
             throw new NotImplementedException();
         }

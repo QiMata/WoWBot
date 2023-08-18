@@ -1,43 +1,45 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using wManager.Wow.Enums;
 using WoWBot.Client.FightClass.Team;
+using WoWBot.Client.FightClass.Team.Druid;
+using WoWBot.Client.FightClass.Team.Hunter;
+using WoWBot.Client.FightClass.Team.Mage;
 using WoWBot.Client.FightClass.Team.Priest;
+using WoWBot.Client.FightClass.Team.Rogue;
+using WoWBot.Client.FightClass.Team.Shaman;
+using WoWBot.Client.FightClass.Team.Warlock;
 using WoWBot.Client.FightClass.Team.Warrior;
 
 namespace WoWBot.Client.FightClass
 {
     static class TeamPlayerFactory
     {
-        public static ITeamPlayer GetByClass(wManager.Wow.Enums.WoWClass wowClass)
+        public static ITeamPlayer GetByClass(WoWClass wowClass)
         {
             Console.Write(wowClass);
             switch (wowClass)
             {
                 case WoWClass.Warrior:
-                    return new WarriorTeamPlayer();
+                    return new PaladinTeamPlayer();
                 case WoWClass.Paladin:
-                    break;
+                    return new PaladinTeamPlayer();
                 case WoWClass.Hunter:
-                    break;
+                    return new HunterTeamPlayer();
                 case WoWClass.Rogue:
-                    break;
+                    return new RogueTeamPlayer();
                 case WoWClass.Priest:
                     return new PriestTeamPlayer();
                 case WoWClass.Shaman:
-                    break;
+                    return new ShamanTeamPlayer();
                 case WoWClass.Mage:
-                    break;
+                    return new MageTeamPlayer();
                 case WoWClass.Warlock:
-                    break;
+                    return new WarlockTeamPlayer();
                 case WoWClass.Druid:
-                    break;
+                    return new DruidTeamPlayer();
                 default:
                     throw new ArgumentOutOfRangeException(nameof(wowClass), wowClass, null);
             }
-            return null;
         }
     }
 }
