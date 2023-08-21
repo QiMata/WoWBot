@@ -30,9 +30,9 @@ EndProject
 Project("{911E67C6-3D85-4FCE-B560-20A9C3E3FF48}") = "WRobot", "..\..\..\Program Files\WRobot\WRobot.exe", "{DF2A8C8E-456C-4DAF-8FBB-18652D5B9CCC}"
 	ProjectSection(DebuggerProjectSystem) = preProject
 		PortSupplier = 00000000-0000-0000-0000-000000000000
-		Executable = E:\repos\WRobot\WRobot.exe
-		RemoteMachine = DESKTOP-H65VJ8M
-		StartingDirectory = E:\repos\WRobot
+		Executable = E:\Program Files\WRobot\WRobot.exe
+		RemoteMachine = DESKTOP-N34H34K
+		StartingDirectory = E:\Program Files\WRobot
 		Environment = Default
 		LaunchingEngine = 00000000-0000-0000-0000-000000000000
 		UseLegacyDebugEngines = No

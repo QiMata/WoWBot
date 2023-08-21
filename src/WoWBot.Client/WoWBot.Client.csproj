@@ -61,8 +61,8 @@
     <Reference Include="MemoryRobot">
       <HintPath>..\Dlls\MemoryRobot.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="robotManager">
       <HintPath>..\Dlls\robotManager.dll</HintPath>
@@ -118,12 +118,20 @@
     <Compile Include="FightClass\Team\Warrior\WarriorDPS.cs" />
     <Compile Include="FightClass\Team\Warrior\WarriorTank.cs" />
     <Compile Include="FightClass\Team\Warrior\WarriorTeamPlayer.cs" />
-    <Compile Include="FSM\AdvQstFSM.cs" />
-    <Compile Include="FSM\States\Learning.cs" />
-    <Compile Include="FSM\States\Navigate.cs" />
-    <Compile Include="FSM\States\Questing.cs" />
-    <Compile Include="FSM\States\Targeting.cs" />
-    <Compile Include="FSM\States\Vendoring.cs" />
+    <Compile Include="Helpers\CombatHelpers.cs" />
+    <Compile Include="Quest\QuestObjective.cs" />
+    <Compile Include="Quest\Quests\Bundles\CuttingTeethBundle.cs" />
+    <Compile Include="Quest\Quests\Bundles\YourPlaceInTheWorldBundle.cs" />
+    <Compile Include="Quest\Quests\Bundles\Level2Durator.cs" />
+    <Compile Include="Quest\Quests\GalgarsCactusAppleSurprise.cs" />
+    <Compile Include="Quest\Quests\StingOfTheScorpid.cs" />
+    <Compile Include="Quest\Quests\VileFamiliars.cs" />
+    <Compile Include="Quest\Quests\RuneInscribedParchment.cs" />
+    <Compile Include="States\GoneFishing.cs" />
+    <Compile Include="States\GoToTheHalfhillMarket.cs" />
+    <Compile Include="States\InventoryManagement.cs" />
+    <Compile Include="States\Questing.cs" />
+    <Compile Include="Helpers\BagHelper.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Helpers\MapDataHelpers.cs" />
     <Compile Include="Helpers\MonitoredSpell.cs" />
@@ -143,8 +151,8 @@
     <Compile Include="Quest\QuestBoard.cs" />
     <Compile Include="Quest\QuestBundle.cs" />
     <Compile Include="Quest\QuestTask.cs" />
-    <Compile Include="TestQuests\CuttingTeeth.cs" />
-    <Compile Include="TestQuests\YourPlaceInTheWorld.cs" />
+    <Compile Include="Quest\Quests\CuttingTeeth.cs" />
+    <Compile Include="Quest\Quests\YourPlaceInTheWorld.cs" />
     <Compile Include="Util\LinqExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
