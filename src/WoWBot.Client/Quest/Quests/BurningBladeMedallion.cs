@@ -1,17 +1,16 @@
 ﻿using System.Collections.Generic;
 using AdvancedQuester.NpcBase;
 using robotManager.Helpful;
-using wManager.Wow.Enums;
 using wManager.Wow.ObjectManager;
 
 namespace WoWBot.Client.Quest.Quests
 {
-    public class VileFamiliars : QuestTask
+    public class BurningBladeMedallion : QuestTask
     {
-        public VileFamiliars()
+        public BurningBladeMedallion()
         {
-            Name = "Vile Familiars";
-            QuestId = 792;
+            Name = "Burning Blade Medallion";
+            QuestId = 794;
 
             MinimumLevel = 2;
             MaximumLevel = 8;
@@ -28,38 +27,33 @@ namespace WoWBot.Client.Quest.Quests
             QuestObjective questObjective = new QuestObjective
             {
                 QuestId = QuestId,
-                TargetId = 3101,
+                TargetId = 3183,
                 Index = 1
             };
             questObjective.HotSpots.AddRange(new List<Vector3>
             {
-                new Vector3(-246.7f, -4332.2f, 61.9f),
-                new Vector3(-244.7f, -4345f, 63f),
-                new Vector3(-224f, -4427f, 63f),
-                new Vector3(-154.9f, -4355.2f, 66.3f)
+                // Yarrog Baneshadow
+                new Vector3(-58.2f, -4220.6f, 62.3f)
             });
 
             QuestObjectives.Add(questObjective);
 
-            TurnInPriority = 3;
+            TurnInPriority = 2;
         }
 
         public override int QuestRewardSelection()
         {
-            if (WoWClass.Shaman == ObjectManager.Me.WowClass)
+            switch (ObjectManager.Me.WowClass)
             {
-                return 1;
+                case wManager.Wow.Enums.WoWClass.Warrior:
+                    return 2;
+                case wManager.Wow.Enums.WoWClass.Druid:
+                case wManager.Wow.Enums.WoWClass.Mage:
+                case wManager.Wow.Enums.WoWClass.Priest:
+                case wManager.Wow.Enums.WoWClass.Warlock:
+                    return 3;
             }
-            else if (WoWClass.Rogue == ObjectManager.Me.WowClass)
-            {
-                return 2;
-            }
-            else if (WoWClass.Hunter == ObjectManager.Me.WowClass
-                    || WoWClass.Warrior == ObjectManager.Me.WowClass)
-            {
-                return 3;
-            }
-            return 4;
+            return 1;
         }
     }
 }

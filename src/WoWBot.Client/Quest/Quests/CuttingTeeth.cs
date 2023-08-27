@@ -1,18 +1,14 @@
 ﻿using System.Collections.Generic;
 using AdvancedQuester.NpcBase;
-using AdvancedQuester.Quest;
 using robotManager.Helpful;
 using wManager.Wow.ObjectManager;
-using WoWBot.Client.Helpers;
 
-namespace AdvancedQuester.TestQuests
+namespace WoWBot.Client.Quest.Quests
 {
     public class CuttingTeeth : QuestTask
     {
         public CuttingTeeth()
         {
-            IsTurnedIn = false;
-
             Name = "Cutting Teeth";
             QuestId = 788;
 
@@ -30,12 +26,14 @@ namespace AdvancedQuester.TestQuests
 
             QuestObjective questObjective = new QuestObjective
             {
-                TargetId = 3098
+                QuestId = QuestId,
+                TargetId = 3098,
+                Index = 1
             };
             questObjective.HotSpots.AddRange(new List<Vector3>
             {
-                new Vector3(-513.5054f, -4290.405f, 39.87229f),
-                new Vector3(-492.8509f, -4350.517f, 39.30183f),
+                new Vector3(-550.3f, -4337.2f, 43.3f),
+                new Vector3(-486.4f, -4381.4f, 48.2f),
                 new Vector3(-454.5764f, -4246.796f, 49.82771f)
             });
 

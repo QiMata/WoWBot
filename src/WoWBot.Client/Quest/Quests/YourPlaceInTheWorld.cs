@@ -1,15 +1,12 @@
 ﻿using AdvancedQuester.NpcBase;
-using AdvancedQuester.Quest;
 using robotManager.Helpful;
 
-namespace AdvancedQuester.Quests
+namespace WoWBot.Client.Quest.Quests
 {
     public class YourPlaceInTheWorld : QuestTask
     {
         public YourPlaceInTheWorld()
         {
-            IsTurnedIn = false;
-
             Name = "Your Place In The World";
             QuestId = 4641;
 

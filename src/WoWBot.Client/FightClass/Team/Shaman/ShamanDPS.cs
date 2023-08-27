@@ -1,6 +1,7 @@
 ﻿using robotManager.Helpful;
 using System;
 using System.Linq;
+using System.Threading;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 using WoWBot.Client.FightClass.Team.Abstract;
@@ -116,8 +117,16 @@ namespace WoWBot.Client.FightClass.Team.Shaman
                 {
                     Fight.StopFight();
                     Lua.LuaDoString("ClearTarget();");
-                    System.Threading.Thread.Sleep(400);
+                    Thread.Sleep(400);
                 }
+            }
+
+            MovementManager.Face(ObjectManager.GetObjectByGuid(ObjectManager.Me.Target).Position);
+
+            if (ObjectManager.GetObjectByGuid(ObjectManager.Me.Target).Position.DistanceTo(ObjectManager.Me.Position) < 0.5)
+            {
+                Move.Backward(Move.MoveAction.DownKey, 100);
+                Thread.Sleep(200);
             }
 
             // drop ghost wolf
@@ -151,43 +160,43 @@ namespace WoWBot.Client.FightClass.Team.Shaman
                     _baseShaman.WeaponBuffStopwatch.Restart();
                 }
             }
-            if (_baseShaman.FlameShock.KnownSpell 
-                && !ObjectManager.Target.HaveBuff("Flame Shock") 
-                && ObjectManager.Me.ManaPercentage > 37 
-                && ObjectManager.Target.GetDistance < 17 
+            if (_baseShaman.FlameShock.KnownSpell
+                && !ObjectManager.Target.HaveBuff("Flame Shock")
+                && ObjectManager.Me.ManaPercentage > 37
+                && ObjectManager.Target.GetDistance < 17
                 && !ObjectManager.Target.HaveBuff("Stormstrike"))
             {
                 _baseShaman.FlameShock.Launch();
             }
 
-            if (_baseShaman.EarthShock.KnownSpell 
-                && ObjectManager.Me.ManaPercentage > 50 
-                && ObjectManager.Me.Level < 12 
-                && ObjectManager.Target.GetDistance < 17 
+            if (_baseShaman.EarthShock.KnownSpell
+                && ObjectManager.Me.ManaPercentage > 50
+                && ObjectManager.Me.Level < 12
+                && ObjectManager.Target.GetDistance < 17
                 && ObjectManager.Target.IsCast)
             {
                 _baseShaman.EarthShock.Launch();
             }
 
-            if (_baseShaman.SearingTotem.KnownSpell 
-                && ObjectManager.Me.ManaPercentage > 40 
-                && ObjectManager.Target.HealthPercent >= 80 
+            if (_baseShaman.SearingTotem.KnownSpell
+                && ObjectManager.Me.ManaPercentage > 40
+                && ObjectManager.Target.HealthPercent >= 80
                 && ObjectManager.Target.GetDistance < 9)
             {
                 _baseShaman.SearingTotem.Launch();
             }
 
-            if (_baseShaman.StoneskinTotem.KnownSpell 
-                && ObjectManager.Me.ManaPercentage > 10 
-                && !ObjectManager.Me.HaveBuff("Stoneskin") 
+            if (_baseShaman.StoneskinTotem.KnownSpell
+                && ObjectManager.Me.ManaPercentage > 10
+                && !ObjectManager.Me.HaveBuff("Stoneskin")
                 && HostileUnitsInRange(15.0f) > 1)
             {
                 _baseShaman.StoneskinTotem.Launch();
             }
 
-            if (_baseShaman.ManaSpringTotem.KnownSpell 
-                && ObjectManager.Me.ManaPercentage > 10 
-                && !ObjectManager.Me.HaveBuff("Mana Spring") 
+            if (_baseShaman.ManaSpringTotem.KnownSpell
+                && ObjectManager.Me.ManaPercentage > 10
+                && !ObjectManager.Me.HaveBuff("Mana Spring")
                 && HostileUnitsInRange(15.0f) > 1)
             {
                 _baseShaman.ManaSpringTotem.Launch();

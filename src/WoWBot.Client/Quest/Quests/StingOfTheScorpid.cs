@@ -1,20 +1,15 @@
 ﻿using System.Collections.Generic;
-using System.Threading;
 using AdvancedQuester.NpcBase;
-using AdvancedQuester.Quest;
 using robotManager.Helpful;
 using wManager.Wow.ObjectManager;
-using WoWBot.Client.Helpers;
 
-namespace AdvancedQuester.Quests
+namespace WoWBot.Client.Quest.Quests
 {
     public class StingOfTheScorpid : QuestTask
     {
         public StingOfTheScorpid()
         {
-            IsTurnedIn = false;
-
-            Name = "Sting Of The Scorpid";
+            Name = "Sting of the Scorpid";
             QuestId = 789;
 
             MinimumLevel = 1;
@@ -31,7 +26,9 @@ namespace AdvancedQuester.Quests
 
             QuestObjective questObjective = new QuestObjective
             {
-                TargetId = 3124
+                QuestId = QuestId,
+                TargetId = 3124,
+                Index = 1
             };
             questObjective.HotSpots.AddRange(new List<Vector3>
             {
@@ -41,6 +38,8 @@ namespace AdvancedQuester.Quests
             });
 
             QuestObjectives.Add(questObjective);
+
+            TurnInPriority = 5;
         }
 
         public override int QuestRewardSelection()

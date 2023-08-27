@@ -13,7 +13,6 @@ namespace WoWBot.Client.States
             Bag.OpenAllBags();
             Thread.Sleep(500);
             Bag.CloseAllBags();
-            CustomProfile.Reevaluate();
         }
     }
 }

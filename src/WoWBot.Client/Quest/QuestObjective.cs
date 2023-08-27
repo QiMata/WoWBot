@@ -1,3 +1,0 @@
-﻿namespace WoWBot.Client.Quest
-{
-}

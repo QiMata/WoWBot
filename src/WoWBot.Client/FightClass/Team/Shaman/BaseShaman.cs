@@ -6,7 +6,10 @@ namespace WoWBot.Client.FightClass.Team.Shaman
     internal class BaseShaman
     {
         public Stopwatch WeaponBuffStopwatch = new Stopwatch();
-        
+
+        // Healing & Rez
+        public MonitoredSpell AutoAttack = new MonitoredSpell("Attack", 0);
+
         // Healing & Rez
         public MonitoredSpell AncestralSpirit = new MonitoredSpell("Ancestral Spirit", 10000);
         public MonitoredSpell HealingWave = new MonitoredSpell("Healing Wave", 3000);

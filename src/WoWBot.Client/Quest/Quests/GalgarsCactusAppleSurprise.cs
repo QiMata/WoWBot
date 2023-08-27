@@ -1,16 +1,13 @@
 ﻿using System.Collections.Generic;
 using AdvancedQuester.NpcBase;
-using AdvancedQuester.Quest;
 using robotManager.Helpful;
 
-namespace AdvancedQuester.Quests
+namespace WoWBot.Client.Quest.Quests
 {
     public class GalgarsCactusAppleSurprise : QuestTask
     {
         public GalgarsCactusAppleSurprise()
         {
-            IsTurnedIn = false;
-
             Name = "Galgar's Cactus Apple Surprise";
             QuestId = 4402;
 
@@ -28,7 +25,9 @@ namespace AdvancedQuester.Quests
 
             QuestObjective questObjective = new QuestObjective
             {
-                TargetId = 171938
+                QuestId = QuestId,
+                TargetId = 171938,
+                Index = 1
             };
             questObjective.HotSpots.AddRange(new List<Vector3>
             {
@@ -38,6 +37,8 @@ namespace AdvancedQuester.Quests
             });
 
             QuestObjectives.Add(questObjective);
+
+            TurnInPriority = 2;
         }
     }
 }

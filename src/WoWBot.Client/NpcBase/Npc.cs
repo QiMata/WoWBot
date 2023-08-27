@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using robotManager.Helpful;
-using System.Linq;
+﻿using robotManager.Helpful;
 
 namespace AdvancedQuester.NpcBase
 {
