@@ -1,5 +1,4 @@
-﻿using AdvancedQuester.NpcBase;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using robotManager.FiniteStateMachine;
 using robotManager.Helpful;
 using System;
@@ -16,7 +15,6 @@ using wManager.Wow.ObjectManager;
 using WoWBot.Client.Database;
 using WoWBot.Client.Helpers;
 using WoWBot.Client.Quest;
-using WoWBot.Client.Quest.Quests;
 
 namespace AdvancedQuester.FSM.States
 {
@@ -55,46 +53,34 @@ namespace AdvancedQuester.FSM.States
                            .ToList();
             }
         }
-        public List<WoWUnit> NearbyQuestGivers
+        public List<WoWUnit> NearbyQuestGivers()
         {
-            get
-            {
-                return ObjectManager.GetObjectWoWUnit()
-                                    .FindAll(x => x.NpcMarker.Equals(NpcMarker.YellowExclamation))
-                                    .OrderBy(x => x.Position.DistanceTo(ObjectManager.Me.Position))
-                                    .ToList();
-            }
+            return ObjectManager.GetObjectWoWUnit()
+                                .FindAll(x => x.NpcMarker.Equals(NpcMarker.YellowExclamation))
+                                .OrderBy(x => x.Position.DistanceTo(ObjectManager.Me.Position))
+                                .ToList();
         }
 
-        public List<WoWUnit> NearbyQuestTurnIns
+        public List<WoWUnit> NearbyQuestTurnIns()
         {
-            get
-            {
-                return ObjectManager.GetObjectWoWUnit()
-                                    .FindAll(x => x.NpcMarker.Equals(NpcMarker.YellowQuestion))
-                                    .OrderBy(x => x.Position.DistanceTo(ObjectManager.Me.Position))
-                                    .ToList();
-            }
+            return ObjectManager.GetObjectWoWUnit()
+                                .FindAll(x => x.NpcMarker.Equals(NpcMarker.YellowQuestion))
+                                .OrderBy(x => x.Position.DistanceTo(ObjectManager.Me.Position))
+                                .ToList();
         }
 
-        private WoWUnit NearestQuestTarget
+        private WoWUnit NearestQuestTarget()
         {
-            get
-            {
-                var targets = ObjectManager.GetWoWUnitByEntry(RemainingQuestObjectives.Select(x => x.TargetId).ToList());
-                targets.RemoveAll(x => TargetGuidBlacklist.ContainsKey(x.Guid) || x.Position.DistanceTo(ObjectManager.Me.Position) > 50);
-                return ObjectManager.GetNearestWoWUnit(targets);
-            }
+            var targets = ObjectManager.GetWoWUnitByEntry(RemainingQuestObjectives.Select(x => x.TargetId).ToList());
+            targets.RemoveAll(x => TargetGuidBlacklist.ContainsKey(x.Guid) || x.Position.DistanceTo(ObjectManager.Me.Position) > 50);
+            return ObjectManager.GetNearestWoWUnit(targets);
         }
 
-        private WoWGameObject NearestQuestObject
+        private WoWGameObject NearestQuestObject()
         {
-            get
-            {
-                var nearbyGameObjects = ObjectManager.GetWoWGameObjectById(RemainingQuestObjectives.Select(x => x.TargetId).ToList());
-                nearbyGameObjects.RemoveAll(x => x.Position.DistanceTo(ObjectManager.Me.Position) > 50);
-                return ObjectManager.GetNearestWoWGameObject(nearbyGameObjects);
-            }
+            var nearbyGameObjects = ObjectManager.GetWoWGameObjectById(RemainingQuestObjectives.Select(x => x.TargetId).ToList());
+            nearbyGameObjects.RemoveAll(x => x.Position.DistanceTo(ObjectManager.Me.Position) > 50);
+            return ObjectManager.GetNearestWoWGameObject(nearbyGameObjects);
         }
 
         public override void Run()
@@ -108,7 +94,7 @@ namespace AdvancedQuester.FSM.States
 
                 Thread.Sleep(500);
 
-                while (MovementManager.InMovement)
+                while (MovementManager.InMovement && !ObjectManager.Me.InCombatFlagOnly)
                 {
                     DefendAgainstAttackingUnits();
 
@@ -125,50 +111,57 @@ namespace AdvancedQuester.FSM.States
 
         private void CheckForQuestRelatedEntities()
         {
-            if (NearbyQuestGivers.Count > 0 || NearbyQuestTurnIns.Count > 0 || NearestQuestObject.IsValid || NearestQuestTarget.IsValid)
+            WoWGameObject questObject = NearestQuestObject();
+            WoWUnit questTarget = NearestQuestTarget();
+            List<WoWUnit> questGivers = NearbyQuestGivers();
+            List<WoWUnit> questTurnIns = NearbyQuestTurnIns();
+
+            if (questGivers.Count > 0 || questTurnIns.Count > 0 || questObject.IsValid || questTarget.IsValid)
             {
                 MovementManager.StopMove();
 
-                if (NearbyQuestTurnIns.Count > 0 && NearbyQuestTurnIns[0].IsValid)
+                if (questTurnIns.Count > 0 && questTurnIns[0].IsValid)
                 {
-                    while (NearbyQuestTurnIns.Count > 0)
+                    while (questTurnIns.Count > 0)
                     {
-                        TurnInAllQuestsForNpc(NearbyQuestTurnIns[0]);
+                        TurnInAllQuestsForNpc(questTurnIns[0]);
                         Thread.Sleep(100);
+                        questTurnIns = NearbyQuestTurnIns();
                     }
                 }
-                else if (NearbyQuestGivers.Count > 0 && NearbyQuestGivers[0].IsValid && Quest.GetLogQuestId().Count < 20)
+                else if (questGivers.Count > 0 && questGivers[0].IsValid && Quest.GetLogQuestId().Count < 20)
                 {
-                    while (NearbyQuestGivers.Count > 0 && Quest.GetLogQuestId().Count < 20)
+                    while (questGivers.Count > 0 && Quest.GetLogQuestId().Count < 20)
                     {
-                        PickUpQuestsFromNpc(NearbyQuestGivers[0]);
+                        PickUpQuestsFromNpc(questGivers[0]);
                         Thread.Sleep(100);
+                        questGivers = NearbyQuestGivers();
                     }
                 }
-                else if (NearestQuestObject.IsValid && NearestQuestTarget.IsValid)
+                else if (questObject.IsValid && questTarget.IsValid)
                 {
 
                     // If the object is closer to the character than the mob
                     // or the aggro distance (with padding) is still longer than the distance from the mob to the game object
-                    if (NearestQuestObject.Position.DistanceTo(ObjectManager.Me.Position) < NearestQuestTarget.Position.DistanceTo(ObjectManager.Me.Position)
-                        || NearestQuestTarget.AggroDistance + 5 > NearestQuestTarget.Position.DistanceTo(NearestQuestObject.Position))
+                    if (questObject.Position.DistanceTo(ObjectManager.Me.Position) < questTarget.Position.DistanceTo(ObjectManager.Me.Position)
+                        || questTarget.AggroDistance + 5 > questTarget.Position.DistanceTo(questObject.Position))
                     {
                         // Go ahead and get the game object
-                        HandleInteractingAndLootingGameObject(NearestQuestObject);
+                        HandleInteractingAndLootingGameObject(questObject);
                     }
                     else
                     {
                         // Handle the mob since we might aggro it while interacting with the game object
-                        HandleAttackableTarget(NearestQuestTarget);
+                        HandleAttackableTarget(questTarget);
                     }
                 }
-                else if (NearestQuestObject.IsValid)
+                else if (questObject.IsValid)
                 {
-                    HandleInteractingAndLootingGameObject(NearestQuestObject);
+                    HandleInteractingAndLootingGameObject(questObject);
                 }
-                else if (NearestQuestTarget.IsValid)
+                else if (questTarget.IsValid)
                 {
-                    HandleAttackableTarget(NearestQuestTarget);
+                    HandleAttackableTarget(questTarget);
                 }
 
                 if (TargetGuidBlacklist.Keys.Count > 0)
@@ -214,11 +207,12 @@ namespace AdvancedQuester.FSM.States
         {
             MoveToAndInteractWith(npc);
 
-            // TODO Find the first quest that is Complete and 
-            // that the NPC is the TurnIn for. I can't think
-            // of a scenario where this dialogue would pop up
-            // for an NPC that has two or more quests on it.
-            DialogueHelper.CompleteOpenQuestFrame(1);
+            QuestTask potentialQuest = ToDo.Find(x => x.TurnInNpc.NpcId.Equals(GetNpcIdFromGuid(npc)));
+
+            if (potentialQuest != null)
+            {
+                DialogueHelper.TurnInQuestFromNpc(potentialQuest.Name, potentialQuest.QuestRewardSelection());
+            }
 
             for (int i = 1; i < 4; i++)
             {
@@ -226,7 +220,6 @@ namespace AdvancedQuester.FSM.States
                 {
                     if (quest.Name.Equals(DialogueHelper.GetQuestTitleOption(i)) || quest.Name.Equals(DialogueHelper.GetQuestGossipOption(i)))
                     {
-                        DialogueHelper.TurnInQuestFromNpc(quest.Name, quest.QuestRewardSelection());
                         MarkComplete(quest);
                         break;
                     }
@@ -244,9 +237,12 @@ namespace AdvancedQuester.FSM.States
         {
             MoveDefensivelyToPosition(npc.Position);
 
-            int npcId = int.Parse(npc.Guid.ToString("X").Substring(6, 4), System.Globalization.NumberStyles.HexNumber);
+            GoToTask.ToPositionAndIntecractWithNpc(npc.Position, GetNpcIdFromGuid(npc));
+        }
 
-            GoToTask.ToPositionAndIntecractWithNpc(npc.Position, npcId);
+        private static int GetNpcIdFromGuid(WoWUnit npc)
+        {
+            return int.Parse(npc.Guid.ToString("X").Substring(6, 4), System.Globalization.NumberStyles.HexNumber);
         }
 
         private void MoveDefensivelyToPosition(Vector3 position, float interactDistance = 5)
@@ -289,6 +285,11 @@ namespace AdvancedQuester.FSM.States
             {
                 string questCompletionJson = File.ReadAllText(@Directory.GetCurrentDirectory() + "/" + ObjectManager.Me.Name + "Quest.json");
                 Completed.AddRange(JsonConvert.DeserializeObject<List<QuestCompletion>>(questCompletionJson));
+            }
+
+            foreach(QuestCompletion completion in Completed)
+            {
+                ToDo.RemoveAll(x => x.QuestId == completion.QuestId);
             }
         }
 

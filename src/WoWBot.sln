@@ -19,7 +19,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dlls", "Dlls", "{D8894BD0-3
 	ProjectSection(SolutionItems) = preProject
 		Dlls\Custom Profile.dll = Dlls\Custom Profile.dll
 		Dlls\MemoryRobot.dll = Dlls\MemoryRobot.dll
-		Dlls\MissingFiles.txt = Dlls\MissingFiles.txt
 		Dlls\robotManager.dll = Dlls\robotManager.dll
 		Dlls\wManager.dll = Dlls\wManager.dll
 		Dlls\wResources.dll = Dlls\wResources.dll

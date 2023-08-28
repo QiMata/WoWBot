@@ -59,16 +59,19 @@ namespace WoWBot.Client.Helpers
 
         public static void CompleteOpenQuestFrame(int questReward)
         {
-            Thread.Sleep(300);
-            Lua.LuaDoString($@"
-                QuestFrameCompleteButton:Click();
-            ");
+            if (Lua.LuaDoString<bool>($@"return QuestFrameCompleteButton:IsVisible()"))
+            {
+                Logging.WriteDebug("Clicking QuestFrameCompleteButton");
+                Thread.Sleep(300);
+                Lua.LuaDoString($@"
+                    QuestFrameCompleteButton:Click();
+                ");
+            }
 
             Thread.Sleep(300);
             Lua.LuaDoString($@"
                 QuestRewardItem{questReward}:Click()
             ");
-
 
             Thread.Sleep(300);
             Lua.LuaDoString($@"
@@ -79,11 +82,6 @@ namespace WoWBot.Client.Helpers
             Lua.LuaDoString($@"
                 QuestFrameAcceptButton:Click();
             ");
-        }
-
-        public static bool HasQuestFrameCompleteButton()
-        {
-            return Lua.LuaDoString<bool>($@"return GossipTitleButton1:IsEnabled()");
         }
 
         public static string GetQuestGossipOption(int i)
