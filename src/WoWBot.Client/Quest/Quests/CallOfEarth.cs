@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using AdvancedQuester.NpcBase;
 using robotManager.Helpful;
 using wManager.Wow.Helpers;
+using WoWBot.Client.NpcBase;
 
 namespace WoWBot.Client.Quest.Quests
 {
@@ -15,14 +15,12 @@ namespace WoWBot.Client.Quest.Quests
             MinimumLevel = 4;
             MaximumLevel = 8;
 
-            PickUpNpc = new QuestGiver
+            TurnInNpc = new QuestGiver
             {
                 NpcName = "Canaga Earthcaller",
                 NpcId = 5887,
                 Position = new Vector3(-630f, -4204.6f, 38.1f)
             };
-
-            TurnInNpc = PickUpNpc;
 
             QuestObjective questObjective = new QuestObjective
             {
@@ -38,8 +36,6 @@ namespace WoWBot.Client.Quest.Quests
             });
 
             QuestObjectives.Add(questObjective);
-
-            TurnInPriority = 1;
         }
     }
     public class CallOfEarthPart2 : QuestTask
@@ -51,13 +47,6 @@ namespace WoWBot.Client.Quest.Quests
 
             MinimumLevel = 4;
             MaximumLevel = 8;
-
-            PickUpNpc = new QuestGiver
-            {
-                NpcName = "Canaga Earthcaller",
-                NpcId = 5887,
-                Position = new Vector3(-630f, -4204.6f, 38.1f)
-            };
 
             TurnInNpc = new QuestGiver
             {
@@ -93,13 +82,6 @@ namespace WoWBot.Client.Quest.Quests
 
             MinimumLevel = 4;
             MaximumLevel = 8;
-
-            PickUpNpc = new QuestGiver
-            {
-                NpcName = "Minor Manifestation of Earth",
-                NpcId = 5891,
-                Position = new Vector3(-877.8f, -4290.4f, 72.6f)
-            };
 
             TurnInNpc = new QuestGiver
             {

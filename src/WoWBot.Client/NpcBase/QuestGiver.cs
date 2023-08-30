@@ -1,4 +1,4 @@
-﻿namespace AdvancedQuester.NpcBase
+﻿namespace WoWBot.Client.NpcBase
 {
     public class QuestGiver : Npc
     {

@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\SQLite.3.13.0\build\net45\SQLite.props" Condition="Exists('..\packages\SQLite.3.13.0\build\net45\SQLite.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -10,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WoWBot.Client</RootNamespace>
     <AssemblyName>WoWBot.Client</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
@@ -71,8 +70,14 @@
     <Reference Include="robotManager">
       <HintPath>..\Dlls\robotManager.dll</HintPath>
     </Reference>
+    <Reference Include="SQLitePCLRaw.batteries_v2, Version=2.1.4.1835, Culture=neutral, PublicKeyToken=8226ea5df37bcae9, processorArchitecture=MSIL">
+      <HintPath>..\packages\SQLitePCLRaw.bundle_e_sqlite3.2.1.4\lib\net461\SQLitePCLRaw.batteries_v2.dll</HintPath>
+    </Reference>
     <Reference Include="SQLitePCLRaw.core, Version=2.1.4.1835, Culture=neutral, PublicKeyToken=1488e028ca7ab535, processorArchitecture=MSIL">
       <HintPath>..\packages\SQLitePCLRaw.core.2.1.4\lib\netstandard2.0\SQLitePCLRaw.core.dll</HintPath>
+    </Reference>
+    <Reference Include="SQLitePCLRaw.provider.dynamic_cdecl, Version=2.1.4.1835, Culture=neutral, PublicKeyToken=b68184102cba0b3b, processorArchitecture=MSIL">
+      <HintPath>..\packages\SQLitePCLRaw.provider.dynamic_cdecl.2.1.4\lib\netstandard2.0\SQLitePCLRaw.provider.dynamic_cdecl.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -103,7 +108,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Database\MainDatabase.cs" />
+    <Compile Include="Database\ItemDatabase.cs" />
     <Compile Include="Database\QuestDb.cs" />
     <Compile Include="FightClass\BaseClassWithRotation.cs" />
     <Compile Include="FightClass\CharacterDecisionFightClass.cs" />
@@ -144,6 +149,7 @@
     <Compile Include="Models\Armor.cs" />
     <Compile Include="Models\Item.cs" />
     <Compile Include="Quest\Quests\CallOfEarth.cs" />
+    <Compile Include="Quest\Quests\APeonsBurden.cs" />
     <Compile Include="Quest\Quests\Sarkoth.cs" />
     <Compile Include="Quest\Quests\ThazzrilsPick.cs" />
     <Compile Include="Quest\Quests\LazyPeons.cs" />
@@ -152,21 +158,17 @@
     <Compile Include="Quest\Quests\BurningBladeMedallion.cs" />
     <Compile Include="Quest\Quests\VileFamiliars.cs" />
     <Compile Include="Quest\Quests\RuneInscribedParchment.cs" />
+    <Compile Include="Quest\Quests\ReportToSenJinVillage.cs" />
     <Compile Include="States\GoneFishing.cs" />
     <Compile Include="States\GoToTheHalfhillMarket.cs" />
-    <Compile Include="States\InventoryManagement.cs" />
     <Compile Include="States\Questing.cs" />
-    <Compile Include="Helpers\BagHelper.cs" />
+    <Compile Include="Helpers\InventoryHelper.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Helpers\MapDataHelpers.cs" />
     <Compile Include="Helpers\MonitoredSpell.cs" />
     <Compile Include="Helpers\UnitHelper.cs" />
-    <Compile Include="NpcBase\FlightManager.cs" />
     <Compile Include="NpcBase\Npc.cs" />
     <Compile Include="NpcBase\QuestGiver.cs" />
-    <Compile Include="NpcBase\Repair.cs" />
-    <Compile Include="NpcBase\Trainer.cs" />
-    <Compile Include="NpcBase\Vendor.cs" />
     <Compile Include="Plugins\LoggingPlugin.cs" />
     <Compile Include="Plugins\Logging\Logger.cs" />
     <Compile Include="Plugins\Models\MeData.cs" />
@@ -198,7 +200,6 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.NETFramework.ReferenceAssemblies.net40.1.0.3\build\Microsoft.NETFramework.ReferenceAssemblies.net40.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.NETFramework.ReferenceAssemblies.net40.1.0.3\build\Microsoft.NETFramework.ReferenceAssemblies.net40.targets'))" />
-    <Error Condition="!Exists('..\packages\SQLite.3.13.0\build\net45\SQLite.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SQLite.3.13.0\build\net45\SQLite.props'))" />
   </Target>
   <PropertyGroup>
     <PostBuildEvent>copy /Y "$(TargetDir)" "E:\repos\WRobot\Profiles\Custom Profile\"</PostBuildEvent>

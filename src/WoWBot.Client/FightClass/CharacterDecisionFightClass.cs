@@ -28,10 +28,11 @@ public class Main : ICustomClass
     public void Dispose()
     {
         //dispose yo class
-        if (_customClass != null)
+        if (_customClass == null)
         {
-            _customClass.Dispose();
+            return;
         }
+        _customClass.Dispose();
     }
 
     public void ShowConfiguration()

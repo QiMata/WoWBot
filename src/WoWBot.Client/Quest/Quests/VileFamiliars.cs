@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using AdvancedQuester.NpcBase;
 using robotManager.Helpful;
 using wManager.Wow.Enums;
 using wManager.Wow.ObjectManager;
+using WoWBot.Client.NpcBase;
 
 namespace WoWBot.Client.Quest.Quests
 {
@@ -16,14 +16,12 @@ namespace WoWBot.Client.Quest.Quests
             MinimumLevel = 2;
             MaximumLevel = 8;
 
-            PickUpNpc = new QuestGiver
+            TurnInNpc = new QuestGiver
             {
                 NpcName = "Zureetha Fargaze",
                 NpcId = 3145,
                 Position = new Vector3(-629.1f, -4228.1f, 38.2f)
             };
-
-            TurnInNpc = PickUpNpc;
 
             QuestObjective questObjective = new QuestObjective
             {
@@ -40,8 +38,6 @@ namespace WoWBot.Client.Quest.Quests
             });
 
             QuestObjectives.Add(questObjective);
-
-            TurnInPriority = 3;
         }
 
         public override int QuestRewardSelection()

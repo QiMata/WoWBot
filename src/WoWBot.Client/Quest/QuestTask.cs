@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using AdvancedQuester.NpcBase;
 using robotManager.Helpful;
 using wManager.Wow.ObjectManager;
+using WoWBot.Client.NpcBase;
 
 namespace WoWBot.Client.Quest
 {
@@ -11,9 +11,6 @@ namespace WoWBot.Client.Quest
         public string Name { get; set; }
         public int MinimumLevel { get; set; }
         public int MaximumLevel { get; set; }
-        public int PickUpPriority { get; set; }
-        public int TurnInPriority { get; set; }
-        public QuestGiver PickUpNpc { get; set; }
         public QuestGiver TurnInNpc { get; set; }
         public List<QuestObjective> QuestObjectives { get; } = new List<QuestObjective>();
 

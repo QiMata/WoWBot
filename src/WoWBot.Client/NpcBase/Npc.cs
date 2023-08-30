@@ -1,7 +1,7 @@
 ﻿using robotManager.Helpful;
 
-namespace AdvancedQuester.NpcBase
-{
+namespace WoWBot.Client.NpcBase
+{ 
     public abstract class Npc
     {
         public string NpcName { get; set; }

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using AdvancedQuester.NpcBase;
 using robotManager.Helpful;
+using WoWBot.Client.NpcBase;
 
 namespace WoWBot.Client.Quest.Quests
 {
@@ -14,14 +14,12 @@ namespace WoWBot.Client.Quest.Quests
             MinimumLevel = 3;
             MaximumLevel = 8;
 
-            PickUpNpc = new QuestGiver
+            TurnInNpc = new QuestGiver
             {
                 NpcName = "Foreman Thazz'ril",
                 NpcId = 11378,
                 Position = new Vector3(-611.6f, -4322.1f, 40f)
             };
-
-            TurnInNpc = PickUpNpc;
 
             QuestObjective questObjective = new QuestObjective
             {
@@ -40,8 +38,6 @@ namespace WoWBot.Client.Quest.Quests
             });
 
             QuestObjectives.Add(questObjective);
-
-            TurnInPriority = 2;
         }
     }
 }

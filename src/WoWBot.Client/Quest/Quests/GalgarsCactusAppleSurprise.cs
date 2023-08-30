@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using AdvancedQuester.NpcBase;
 using robotManager.Helpful;
+using WoWBot.Client.NpcBase;
 
 namespace WoWBot.Client.Quest.Quests
 {
@@ -14,14 +14,12 @@ namespace WoWBot.Client.Quest.Quests
             MinimumLevel = 1;
             MaximumLevel = 7;
 
-            PickUpNpc = new QuestGiver
+            TurnInNpc = new QuestGiver
             {
                 NpcName = "Galgar",
                 NpcId = 9796,
                 Position = new Vector3(-561.6f, -4221.8f, 41.6f)
             };
-
-            TurnInNpc = PickUpNpc;
 
             QuestObjective questObjective = new QuestObjective
             {
@@ -37,8 +35,6 @@ namespace WoWBot.Client.Quest.Quests
             });
 
             QuestObjectives.Add(questObjective);
-
-            TurnInPriority = 2;
         }
     }
 }

@@ -7,7 +7,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using wManager.Wow.Bot.Tasks;
 using wManager.Wow.Enums;
 using wManager.Wow.Helpers;
@@ -31,6 +30,7 @@ namespace AdvancedQuester.FSM.States
         public Questing()
         {
             DisplayName = "Questing";
+            LoadQuestProgress();
         }
         public QuestObjective ClosestObjective
         {
@@ -87,29 +87,25 @@ namespace AdvancedQuester.FSM.States
         {
             try
             {
-                Logging.Write("[Questing] Pulse");
-                LoadQuestProgress();
+                // Update ToDo list with current quest log
+                UpdateToDoWithLogQuests();
 
-                RotateThroughClosestHotSpot();
-
-                Thread.Sleep(500);
-
-                while (MovementManager.InMovement && !ObjectManager.Me.InCombatFlagOnly)
+                if (CheckForQuestRelatedEntities())
                 {
-                    DefendAgainstAttackingUnits();
-
-                    UseNearbyHotSpotQuestConsumeables();
-
-                    CheckForQuestRelatedEntities();
+                    LootAllNearbyLootables();
+                }
+                else
+                {
+                    RotateThroughClosestHotSpot();
                 }
             }
             catch (Exception ex)
             {
-                Logging.WriteError("Questing " + ex.Message);
+                Logging.WriteError("[Questing] " + ex.StackTrace);
             }
         }
 
-        private void CheckForQuestRelatedEntities()
+        private bool CheckForQuestRelatedEntities()
         {
             WoWGameObject questObject = NearestQuestObject();
             WoWUnit questTarget = NearestQuestTarget();
@@ -118,33 +114,39 @@ namespace AdvancedQuester.FSM.States
 
             if (questGivers.Count > 0 || questTurnIns.Count > 0 || questObject.IsValid || questTarget.IsValid)
             {
+                List<WoWUnit> nearbyMobs = ObjectManager.GetObjectWoWUnit()
+                                .FindAll(x => x.IsAlive && x.IsAttackable && x.Reaction == Reaction.Hostile)
+                                .OrderBy(x => x.Position.DistanceTo(ObjectManager.Me.Position))
+                                .ToList();
+
                 MovementManager.StopMove();
 
                 if (questTurnIns.Count > 0 && questTurnIns[0].IsValid)
                 {
-                    while (questTurnIns.Count > 0)
+                    while (questTurnIns.Count > 0 && questTurnIns[0].IsValid)
                     {
-                        TurnInAllQuestsForNpc(questTurnIns[0]);
-                        Thread.Sleep(100);
+                        WoWUnit questNpc = questTurnIns[0];
+                        TurnInAllQuestsForNpc(questNpc);
+
                         questTurnIns = NearbyQuestTurnIns();
                     }
                 }
                 else if (questGivers.Count > 0 && questGivers[0].IsValid && Quest.GetLogQuestId().Count < 20)
                 {
-                    while (questGivers.Count > 0 && Quest.GetLogQuestId().Count < 20)
+                    while (questGivers.Count > 0 && questGivers[0].IsValid)
                     {
-                        PickUpQuestsFromNpc(questGivers[0]);
-                        Thread.Sleep(100);
+                        WoWUnit questNpc = questGivers[0];
+                        PickUpQuestsFromNpc(questNpc);
+
                         questGivers = NearbyQuestGivers();
                     }
                 }
-                else if (questObject.IsValid && questTarget.IsValid)
+                else if (questObject.IsValid && nearbyMobs.Count > 0 && nearbyMobs[0].IsValid)
                 {
-
                     // If the object is closer to the character than the mob
                     // or the aggro distance (with padding) is still longer than the distance from the mob to the game object
-                    if (questObject.Position.DistanceTo(ObjectManager.Me.Position) < questTarget.Position.DistanceTo(ObjectManager.Me.Position)
-                        || questTarget.AggroDistance + 5 > questTarget.Position.DistanceTo(questObject.Position))
+                    if (questObject.Position.DistanceTo(ObjectManager.Me.Position) < nearbyMobs[0].Position.DistanceTo(ObjectManager.Me.Position)
+                        || nearbyMobs[0].AggroDistance + 5 > nearbyMobs[0].Position.DistanceTo(questObject.Position))
                     {
                         // Go ahead and get the game object
                         HandleInteractingAndLootingGameObject(questObject);
@@ -152,7 +154,7 @@ namespace AdvancedQuester.FSM.States
                     else
                     {
                         // Handle the mob since we might aggro it while interacting with the game object
-                        HandleAttackableTarget(questTarget);
+                        HandleAttackableTarget(nearbyMobs[0]);
                     }
                 }
                 else if (questObject.IsValid)
@@ -175,12 +177,13 @@ namespace AdvancedQuester.FSM.States
                         }
                     }
                 }
+                return true;
             }
+            return false;
         }
 
         private void PickUpQuestsFromNpc(WoWUnit npc)
         {
-
             List<int> questsIdsInPreviousLog = Quest.GetLogQuestId()
                                             .Select(x => x.ID)
                                             .ToList();
@@ -189,16 +192,28 @@ namespace AdvancedQuester.FSM.States
 
             DialogueHelper.PickupQuestFromNpc();
 
-            List<int> questsIdsInNewLog = Quest.GetLogQuestId()
-                                            .Select(x => x.ID)
-                                            .ToList();
+            UpdateToDoWithLogQuests();
+        }
 
-            foreach (int questId in questsIdsInNewLog)
+        private static void UpdateToDoWithLogQuests()
+        {
+            List<int> questsIdsLog = Quest.GetLogQuestId()
+                                                .Select(x => x.ID)
+                                                .ToList();
+
+            if (ToDo.Count > 0)
             {
-                if (!questsIdsInPreviousLog.Contains(questId))
+                ToDo.RemoveAll(x => !questsIdsLog.Contains(x.QuestId));
+            }
+
+            if (questsIdsLog.Count > 0)
+            {
+                foreach (var id in questsIdsLog)
                 {
-                    Logging.WriteDebug("Found new quest " + questId);
-                    ToDo.Add(QuestDb.GetQuestTaskById(questId));
+                    if (ToDo.FindAll(x => x.QuestId == id).Count == 0)
+                    {
+                        ToDo.Add(QuestDb.GetQuestTaskById(id));
+                    }
                 }
             }
         }
@@ -207,35 +222,68 @@ namespace AdvancedQuester.FSM.States
         {
             MoveToAndInteractWith(npc);
 
-            QuestTask potentialQuest = ToDo.Find(x => x.TurnInNpc.NpcId.Equals(GetNpcIdFromGuid(npc)));
+            List<int> questsIdsInPreviousLog = Quest.GetLogQuestId()
+                                                    .Select(x => x.ID)
+                                                    .ToList();
 
-            if (potentialQuest != null)
+            if (Lua.LuaDoString<bool>($@"return GossipTitleButton1:IsVisible()"))
             {
-                DialogueHelper.TurnInQuestFromNpc(potentialQuest.Name, potentialQuest.QuestRewardSelection());
-            }
-
-            for (int i = 1; i < 4; i++)
-            {
-                foreach (QuestTask quest in ToDo)
+                for (int i = 1; i < 4; i++)
                 {
-                    if (quest.Name.Equals(DialogueHelper.GetQuestTitleOption(i)) || quest.Name.Equals(DialogueHelper.GetQuestGossipOption(i)))
+                    foreach (QuestTask quest in ToDo)
                     {
-                        MarkComplete(quest);
-                        break;
+                        if (quest.Name.Equals(DialogueHelper.GetQuestTitleOption(i)) || quest.Name.Equals(DialogueHelper.GetQuestGossipOption(i)))
+                        {
+                            DialogueHelper.TurnInQuestFromNpc(quest.Name, quest.QuestRewardSelection());
+                            break;
+                        }
                     }
-                };
+                }
             }
+            else
+            {
+                QuestTask potentialQuest = ToDo.Find(x => x.TurnInNpc.NpcId.Equals(GetNpcIdFromGuid(npc)));
+
+                if (potentialQuest != null)
+                {
+                    DialogueHelper.TurnInQuestFromNpc(potentialQuest.Name, potentialQuest.QuestRewardSelection());
+                }
+            }
+
+
+            Thread.Sleep(500);
 
             List<int> questsIdsInLog = Quest.GetLogQuestId()
                                             .Select(x => x.ID)
                                             .ToList();
 
-            ToDo.RemoveAll(x => !questsIdsInLog.Contains(x.QuestId));
+            foreach (int questId in questsIdsInPreviousLog)
+            {
+                if (!questsIdsInLog.Contains(questId) && questsIdsInPreviousLog.Contains(questId))
+                {
+                    QuestTask completedQuest = ToDo.Find(x => x.QuestId == questId);
+
+                    if (completedQuest != null)
+                    {
+                        ToDo.Remove(completedQuest);
+
+                        if (Completed.Find(x => x.QuestId == questId) == null)
+                        {
+                            Completed.Add(new QuestCompletion() { QuestId = completedQuest.QuestId, Name = completedQuest.Name });
+                        }
+
+                        File.WriteAllText(@Directory.GetCurrentDirectory() + "/" + ObjectManager.Me.Name + "Quest.json", JsonConvert.SerializeObject(Completed));
+                        break;
+                    }
+                }
+            }
+
+            InventoryHelper.UpgradeToLatestEquipment();
         }
 
         private void MoveToAndInteractWith(WoWUnit npc)
         {
-            MoveDefensivelyToPosition(npc.Position);
+            MoveDefensivelyToPosition(npc.Position, npc.InteractDistance);
 
             GoToTask.ToPositionAndIntecractWithNpc(npc.Position, GetNpcIdFromGuid(npc));
         }
@@ -245,28 +293,47 @@ namespace AdvancedQuester.FSM.States
             return int.Parse(npc.Guid.ToString("X").Substring(6, 4), System.Globalization.NumberStyles.HexNumber);
         }
 
-        private void MoveDefensivelyToPosition(Vector3 position, float interactDistance = 5)
+        private void MoveDefensivelyToPosition(Vector3 position, float interactDistance = 3.5f)
         {
-            while (position.DistanceTo(ObjectManager.Me.Position) > interactDistance)
+            List<Vector3> path = PathFinder.FindPath(position);
+
+            while (path.Count > 0 && path[0].DistanceTo(position) > interactDistance)
             {
-                GoToTask.ToPosition(position);
+                MovementManager.MoveTo(path[0]);
 
-                while (MovementManager.InMovement || ObjectManager.Me.InCombat || ObjectManager.Me.IsLooting())
+                while (MovementManager.InMovement || ObjectManager.Me.InCombatFlagOnly || ObjectManager.Me.IsLooting())
                 {
-                    Thread.Sleep(100);
                     DefendAgainstAttackingUnits();
-                    Thread.Sleep(100);
                     LootAllNearbyLootables();
+                    if (path == null || path.Count == 0)
+                    {
+                        return;
+                    }
                 }
-                Thread.Sleep(500);
+                path.RemoveAt(0);
             }
+            GoToTask.ToPosition(position, interactDistance);
         }
-
-        public void MarkComplete(QuestTask questTask)
+        private void RotateThroughArea(Vector3 position)
         {
-            Completed.Add(new QuestCompletion() { QuestId = questTask.QuestId, Name = questTask.Name });
+            List<Vector3> path = PathFinder.FindPath(position);
 
-            File.WriteAllText(@Directory.GetCurrentDirectory() + "/" + ObjectManager.Me.Name + "Quest.json", JsonConvert.SerializeObject(Completed));
+            if (path.Count > 0)
+            {
+                MovementManager.Go(path);
+
+                while (MovementManager.InMovement)
+                {
+                    DefendAgainstAttackingUnits();
+
+                    if (CheckForQuestRelatedEntities()
+                        || UseNearbyHotSpotQuestConsumeables())
+                    {
+                        LootAllNearbyLootables();
+                        break;
+                    }
+                }
+            }
         }
 
         public static void LoadQuestProgress()
@@ -287,7 +354,7 @@ namespace AdvancedQuester.FSM.States
                 Completed.AddRange(JsonConvert.DeserializeObject<List<QuestCompletion>>(questCompletionJson));
             }
 
-            foreach(QuestCompletion completion in Completed)
+            foreach (QuestCompletion completion in Completed)
             {
                 ToDo.RemoveAll(x => x.QuestId == completion.QuestId);
             }
@@ -302,20 +369,51 @@ namespace AdvancedQuester.FSM.States
                 MovementManager.StopMove();
 
                 var nearestEnemy = ObjectManager.GetNearestWoWUnit(attackingUnits);
-                Fight.StartFight(ObjectManager.GetNearestWoWUnit(attackingUnits).Guid);
+                Fight.StartFight(nearestEnemy.Guid);
 
-                Thread.Sleep(200);
                 while (nearestEnemy.IsAlive)
                 {
-                    Thread.Sleep(200);
+                    Thread.Sleep(100);
                 }
                 attackingUnits = ObjectManager.GetUnitAttackPlayer();
-                Thread.Sleep(200);
             }
+            List<Vector3> currentTrajectory = MovementManager.CurrentPath.OrderBy(x => x.DistanceTo(ObjectManager.Me.Position)).ToList();
+            List<WoWUnit> localWoWUnits = FindHostileUnitsNearPosition(currentTrajectory[0]);
+
+            if (!ObjectManager.Me.InCombatFlagOnly && currentTrajectory.Count > 0)
+            {
+                currentTrajectory = MovementManager.CurrentPath.OrderBy(x => x.DistanceTo(ObjectManager.Me.Position)).ToList();
+                localWoWUnits = FindHostileUnitsNearPosition(currentTrajectory[0]);
+
+                while (localWoWUnits.Count > 0)
+                {
+                    Fight.StartFight(ObjectManager.GetNearestWoWUnit(localWoWUnits).Guid);
+
+                    while (Fight.InFight || ObjectManager.Me.InCombatFlagOnly)
+                    {
+                        Thread.Sleep(100);
+                    }
+                    LootAllNearbyLootables();
+
+                    localWoWUnits = FindHostileUnitsNearPosition(currentTrajectory[0]);
+                }
+            }
+
+            LootAllNearbyLootables();
+
             Fight.StopFight();
         }
 
-        private void UseNearbyHotSpotQuestConsumeables()
+        private static List<WoWUnit> FindHostileUnitsNearPosition(Vector3 currentTrajectory)
+        {
+            return ObjectManager.GetObjectWoWUnit().FindAll(x => x.IsAlive
+                                                && x.IsAttackable
+                                                && x.Reaction == Reaction.Hostile
+                                                && x.AggroDistance + ObjectManager.Me.InteractDistance + 0.5 > x.Position.DistanceTo(currentTrajectory))
+                                            .ToList();
+        }
+
+        private bool UseNearbyHotSpotQuestConsumeables()
         {
             // Use consumables for the quest when in range of its hotspot
             List<QuestObjective> objectivesWithConsumables = RemainingQuestObjectives.FindAll(x => x.ConsumableItemId != 0);
@@ -326,8 +424,10 @@ namespace AdvancedQuester.FSM.States
                 {
                     ItemsManager.UseItem(ItemsManager.GetNameById(objective.ConsumableItemId));
                     Thread.Sleep(1500);
+                    return true;
                 }
             }
+            return false;
         }
 
         private static void LootAllNearbyLootables()
@@ -343,6 +443,7 @@ namespace AdvancedQuester.FSM.States
                 {
                     LootingTask.Pulse(list);
                     list = ObjectManager.GetWoWUnitLootable();
+                    Usefuls.WaitIsLooting();
                 }
             }
         }
@@ -360,6 +461,7 @@ namespace AdvancedQuester.FSM.States
                     int index = ClosestObjective.HotSpots.IndexOf(CurrentHotspot);
                     if (index == ClosestObjective.HotSpots.Count - 1)
                     {
+                        ClosestObjective.HotSpots.Reverse();
                         CurrentHotspot = ClosestObjective.HotSpots[0];
                     }
                     else
@@ -368,13 +470,13 @@ namespace AdvancedQuester.FSM.States
                     }
                 }
 
-                Task.Run(() => GoToTask.ToPosition(CurrentHotspot));
+                RotateThroughArea(CurrentHotspot);
             }
             else if (ToDo.FindAll(x => x.IsComplete()).Count > 0)
             {
-                Task.Run(() => GoToTask.ToPosition(ToDo.FindAll(x => x.IsComplete())
+                RotateThroughArea(ToDo.FindAll(x => x.IsComplete())
                     .OrderBy(x => x.TurnInNpc.Position.DistanceTo(ObjectManager.Me.Position))
-                    .ToArray()[0].TurnInNpc.Position));
+                    .ToArray()[0].TurnInNpc.Position);
             }
             else
             {
@@ -382,10 +484,8 @@ namespace AdvancedQuester.FSM.States
             }
         }
 
-        private void HandleInteractingAndLootingGameObject(WoWGameObject gameObject)
+        private bool HandleInteractingAndLootingGameObject(WoWGameObject gameObject)
         {
-            Logging.WriteDebug("[QuestBundle] HandleInteractingAndLootingGameObject");
-
             MoveDefensivelyToPosition(gameObject.Position, gameObject.InteractDistance);
 
             Interact.InteractGameObjectAutoLoot(gameObject.GetBaseAddress);
@@ -393,30 +493,26 @@ namespace AdvancedQuester.FSM.States
 
             // Give time to despawn
             Thread.Sleep(500);
+            return true;
         }
 
-        private void HandleAttackableTarget(WoWUnit target)
+        private bool HandleAttackableTarget(WoWUnit target)
         {
-            Thread.Sleep(100);
-            if (ClosestObjective.UsableItemId != 0)
+            if (ClosestObjective.UsableItemId != 0 && ClosestObjective.TargetId == target.Entry)
             {
-                Logging.WriteDebug("[QuestBundle] HandleAttackableTarget Interact with item");
                 ObjectManager.Me.Target = target.Guid;
 
-                GoToTask.ToPosition(target.Position, target.InteractDistance);
+                MoveDefensivelyToPosition(target.Position, target.InteractDistance);
 
-                Thread.Sleep(100);
                 ItemsManager.UseItem(ItemsManager.GetNameById(ClosestObjective.UsableItemId));
                 TargetGuidBlacklist.Add(target.Guid, Stopwatch.StartNew());
-                Thread.Sleep(200);
             }
             else
             {
-                Logging.WriteDebug("[QuestBundle] HandleAttackableTarget Attack");
                 // Prioritize fighting mobs first
                 Fight.StartFight(target.Guid);
-                Thread.Sleep(200);
             }
+            return true;
         }
     }
 }

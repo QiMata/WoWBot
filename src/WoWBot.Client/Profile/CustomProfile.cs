@@ -6,12 +6,18 @@ using Custom_Profile;
 using robotManager.FiniteStateMachine;
 using robotManager.Helpful;
 using wManager;
+using wManager.Events;
 using wManager.Wow.Bot.States;
 using wManager.Wow.Helpers;
+using WoWBot.Client.Database;
+using WoWBot.Client.Helpers;
+using WoWBot.Client.NpcBase;
+using WoWBot.Client.States;
 
 class CustomProfile : ICustomProfile
 {
     private static readonly Engine Fsm = new Engine();
+    public static bool NeedsGearCheck = false;
 
     public void Pulse()
     {
@@ -23,6 +29,9 @@ class CustomProfile : ICustomProfile
             // Load CC:
             CustomClass.LoadCustomClass();
 
+            //ItemDatabase.GetSampleItems();
+
+            wManagerSetting.CurrentSetting.PathFinderFromServer = false;
             wManagerSetting.CurrentSetting.EquipAvailableBagIfFreeContainerSlot = true;
             wManagerSetting.CurrentSetting.TrainNewSkills = true;
             wManagerSetting.CurrentSetting.AvoidWallWithRays = false;
@@ -31,14 +40,10 @@ class CustomProfile : ICustomProfile
 
             ConfigWowForThisBot.ConfigWow();
 
-            //MainDatabase.GetWeaponById(16837);
-            //MainDatabase.GetWeaponById(16838);
-            //MainDatabase.GetWeaponById(16839);
-            //MainDatabase.GetWeaponById(16840);
-            //MainDatabase.GetWeaponById(16841);
-            //MainDatabase.GetWeaponById(16842);
-            //MainDatabase.GetWeaponById(16843);
-            //MainDatabase.GetWeaponById(16844);
+            LootingEvents.OnLootSuccessful += (unit) =>
+            {
+                InventoryHelper.UpgradeToLatestEquipment();
+            };
 
             Reevaluate();
         }
@@ -52,6 +57,7 @@ class CustomProfile : ICustomProfile
             {
             }
             Logging.WriteError("CustomProfile > Pulse(): " + e);
+            Logging.WriteError("CustomProfile > Cause: " + e.InnerException);
         }
     }
 
@@ -90,7 +96,7 @@ class CustomProfile : ICustomProfile
             Fsm.AddState(new ToTown { Priority = 6 });
             Fsm.AddState(new Talents { Priority = 5 });
             Fsm.AddState(new Trainers { Priority = 4 });
-            Fsm.AddState(new Questing { Priority = 3 });
+            Fsm.AddState(new Questing { Priority = 2 });
 
             Fsm.AddState(new Idle { Priority = 0 });
 

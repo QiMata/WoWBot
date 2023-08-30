@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using AdvancedQuester.NpcBase;
 using robotManager.Helpful;
 using wManager.Wow.ObjectManager;
+using WoWBot.Client.NpcBase;
 
 namespace WoWBot.Client.Quest.Quests
 {
@@ -15,14 +15,12 @@ namespace WoWBot.Client.Quest.Quests
             MinimumLevel = 1;
             MaximumLevel = 6;
 
-            PickUpNpc = new QuestGiver
+            TurnInNpc = new QuestGiver
             {
                 NpcName = "Gornek",
                 NpcId = 3143,
                 Position = new Vector3(-600.132f, -4186.19f, 41.08915f)
             };
-
-            TurnInNpc = PickUpNpc;
 
             QuestObjective questObjective = new QuestObjective
             {

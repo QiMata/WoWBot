@@ -1,5 +1,4 @@
-﻿using robotManager.Helpful;
-using System;
+﻿using System;
 using System.Threading;
 using wManager.Wow.Helpers;
 
@@ -9,29 +8,41 @@ namespace WoWBot.Client.Helpers
     {
         public static void PickupQuestFromNpc()
         {
-            Lua.LuaDoString($@"
-                QuestFrameAcceptButton:Click();
-            ");
+            if (Lua.LuaDoString<bool>($@"return QuestFrameAcceptButton:IsVisible()"))
+            {
+                Lua.LuaDoString($@"
+                    QuestFrameAcceptButton:Click();
+                ");
 
-            Thread.Sleep(300);
-            Lua.LuaDoString($@"
-                GossipTitleButton1:Click();
-            ");
+                Thread.Sleep(300);
+            }
 
-            Thread.Sleep(300);
-            Lua.LuaDoString($@"
-                QuestFrameAcceptButton:Click();
-            ");
+            if (Lua.LuaDoString<bool>($@"return GossipTitleButton1:IsVisible()"))
+            {
+                Lua.LuaDoString($@"
+                    GossipTitleButton1:Click();
+                ");
 
-            Thread.Sleep(300);
-            Lua.LuaDoString($@"
-                QuestFrameAcceptButton:Click();
-            ");
+                Thread.Sleep(300);
+            }
 
-            Thread.Sleep(300);
-            Lua.LuaDoString($@"
-                QuestFrameGoodbyeButton:Click();
-            ");
+            if (Lua.LuaDoString<bool>($@"return QuestFrameAcceptButton:IsVisible()"))
+            {
+                Lua.LuaDoString($@"
+                    QuestFrameAcceptButton:Click();
+                ");
+
+                Thread.Sleep(300);
+            }
+
+            if (Lua.LuaDoString<bool>($@"return QuestFrameCloseButton:IsVisible()"))
+            {
+                Lua.LuaDoString($@"
+                    QuestFrameCloseButton:Click();
+                ");
+
+                Thread.Sleep(300);
+            }
         }
         public static void TurnInQuestFromNpc(string questName, int questReward = 1)
         {
@@ -50,6 +61,7 @@ namespace WoWBot.Client.Helpers
                     Lua.LuaDoString($@"
                             QuestTitleButton{i}:Click()
                         ");
+                    Thread.Sleep(300);
                     break;
                 }
             }
@@ -61,27 +73,48 @@ namespace WoWBot.Client.Helpers
         {
             if (Lua.LuaDoString<bool>($@"return QuestFrameCompleteButton:IsVisible()"))
             {
-                Logging.WriteDebug("Clicking QuestFrameCompleteButton");
-                Thread.Sleep(300);
                 Lua.LuaDoString($@"
                     QuestFrameCompleteButton:Click();
                 ");
+
+                Thread.Sleep(300);
             }
 
-            Thread.Sleep(300);
-            Lua.LuaDoString($@"
-                QuestRewardItem{questReward}:Click()
-            ");
+            if (Lua.LuaDoString<bool>($@"return QuestRewardItem{questReward}:IsVisible()"))
+            {
+                Lua.LuaDoString($@"
+                    QuestRewardItem{questReward}:Click()
+                ");
 
-            Thread.Sleep(300);
-            Lua.LuaDoString($@"
-                QuestFrameCompleteQuestButton:Click();
-            ");
+                Thread.Sleep(300);
+            }
 
-            Thread.Sleep(300);
-            Lua.LuaDoString($@"
-                QuestFrameAcceptButton:Click();
-            ");
+            if (Lua.LuaDoString<bool>($@"return QuestFrameCompleteQuestButton:IsVisible()"))
+            {
+                Lua.LuaDoString($@"
+                    QuestFrameCompleteQuestButton:Click();
+                ");
+
+                Thread.Sleep(300);
+            }
+
+            if (Lua.LuaDoString<bool>($@"return QuestFrameAcceptButton:IsVisible()"))
+            {
+                Lua.LuaDoString($@"
+                    QuestFrameAcceptButton:Click();
+                ");
+
+                Thread.Sleep(300);
+            }
+
+            if (Lua.LuaDoString<bool>($@"return QuestFrameCloseButton:IsVisible()"))
+            {
+                Lua.LuaDoString($@"
+                    QuestFrameCloseButton:Click();
+                ");
+
+                Thread.Sleep(300);
+            }
         }
 
         public static string GetQuestGossipOption(int i)

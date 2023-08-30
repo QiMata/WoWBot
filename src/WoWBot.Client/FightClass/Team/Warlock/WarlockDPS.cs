@@ -16,10 +16,10 @@ namespace WoWBot.Client.FightClass.Team.Warlock
         private Random _r = new Random();
         private readonly uint _wowBase = (uint)Memory.WowMemory.Memory.GetProcess().MainModule.BaseAddress;
         private bool _isLaunched;
-        private ulong _lastTarget;
-        private ulong _currentTarget;
-        private uint _target;
-        uint oldTarget;
+        //private ulong _lastTarget;
+        //private ulong _currentTarget;
+        //private uint _target;
+        //uint oldTarget;
 
         public void Initialize() // When product started, initialize and launch Fightclass
         {

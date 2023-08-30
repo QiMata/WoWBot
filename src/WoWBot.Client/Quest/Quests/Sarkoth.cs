@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using AdvancedQuester.NpcBase;
 using robotManager.Helpful;
 using wManager.Wow.ObjectManager;
+using WoWBot.Client.NpcBase;
 
 namespace WoWBot.Client.Quest.Quests
 {
@@ -15,14 +15,12 @@ namespace WoWBot.Client.Quest.Quests
             MinimumLevel = 1;
             MaximumLevel = 10;
 
-            PickUpNpc = new QuestGiver
+            TurnInNpc = new QuestGiver
             {
                 NpcName = "Hana'zua",
                 NpcId = 3287,
                 Position = new Vector3(-397.8f, -4109f, 50.2f)
             };
-
-            TurnInNpc = PickUpNpc;
 
             QuestObjective questObjective = new QuestObjective
             {
@@ -36,8 +34,6 @@ namespace WoWBot.Client.Quest.Quests
             });
 
             QuestObjectives.Add(questObjective);
-
-            TurnInPriority = 1;
         }
     }
     public class SarkothPart2 : QuestTask
@@ -50,21 +46,12 @@ namespace WoWBot.Client.Quest.Quests
             MinimumLevel = 1;
             MaximumLevel = 10;
 
-            PickUpNpc = new QuestGiver
-            {
-                NpcName = "Hana'zua",
-                NpcId = 3287,
-                Position = new Vector3(-397.8f, -4109f, 50.2f)
-            };
-
             TurnInNpc = new QuestGiver
             {
                 NpcName = "Gornek",
                 NpcId = 3143,
                 Position = new Vector3(-600.132f, -4186.19f, 41.08915f)
             };
-
-            TurnInPriority = 2;
         }
 
         public override int QuestRewardSelection()

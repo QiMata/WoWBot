@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using WoWBot.Client.Quest;
 using WoWBot.Client.Quest.Quests;
 
@@ -11,6 +7,7 @@ namespace WoWBot.Client.Database
     public static class QuestDb
     {
         private static readonly List<QuestTask> AllQuests = new List<QuestTask>() {
+            new APeonsBurden(),
             new BurningBladeMedallion(),
             new CallOfEarthPart1(),
             new CallOfEarthPart2(),
@@ -18,6 +15,7 @@ namespace WoWBot.Client.Database
             new CuttingTeeth(),
             new GalgarsCactusAppleSurprise(),
             new LazyPeons(),
+            new ReportToSenJinVillage(),
             new RuneInscribedParchment(),
             new SarkothPart1(),
             new SarkothPart2(),
