@@ -99,10 +99,5 @@ namespace WoWBot.Client.FightClass.Team.Paladin
         {
             throw new NotImplementedException();
         }
-
-        protected override void OptimizeGear()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

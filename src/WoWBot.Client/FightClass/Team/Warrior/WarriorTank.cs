@@ -17,8 +17,6 @@ namespace WoWBot.Client.FightClass.Team.Warrior
         private MonitoredSpell _bloodRage = new MonitoredSpell("Bloodrage");
         private MonitoredSpell DefensiveStance = new MonitoredSpell("Defensive Stance");
 
-
-
         public WarriorTank(float range) : base(range)
         {
         }
@@ -80,11 +78,6 @@ namespace WoWBot.Client.FightClass.Team.Warrior
                     _taunt.Cast();
                 }
             }
-        }
-
-        protected override void OptimizeGear()
-        {
-            throw new NotImplementedException();
         }
     }
 }

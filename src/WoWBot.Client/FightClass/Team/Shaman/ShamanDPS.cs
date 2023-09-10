@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Threading;
+using wManager.Wow.Bot.Tasks;
 using wManager.Wow.Helpers;
 using wManager.Wow.ObjectManager;
 using WoWBot.Client.FightClass.Team.Abstract;
@@ -121,12 +122,20 @@ namespace WoWBot.Client.FightClass.Team.Shaman
                 }
             }
 
+            Lua.RunMacroText("/assist " + ObjectManager.Me.Name);
+
+            WoWObject target = ObjectManager.GetObjectByGuid(ObjectManager.Me.Target);
+
             MovementManager.Face(ObjectManager.GetObjectByGuid(ObjectManager.Me.Target).Position);
 
-            if (ObjectManager.GetObjectByGuid(ObjectManager.Me.Target).Position.DistanceTo(ObjectManager.Me.Position) < 0.5)
+            if (target.Position.DistanceTo(ObjectManager.Me.Position) < 0.5)
             {
-                Move.Backward(Move.MoveAction.DownKey, 100);
-                Thread.Sleep(200);
+                Move.Backward(Move.MoveAction.DownKey, 50);
+                Thread.Sleep(50);
+            } else if (target.Position.DistanceTo(ObjectManager.Me.Position) > 28)
+            {
+                Move.Forward(Move.MoveAction.DownKey, 50);
+                Thread.Sleep(50);
             }
 
             // drop ghost wolf
@@ -202,9 +211,15 @@ namespace WoWBot.Client.FightClass.Team.Shaman
                 _baseShaman.ManaSpringTotem.Launch();
             }
 
-            if (_baseShaman.LightningBolt.KnownSpell && ObjectManager.Me.ManaPercentage > 50)
+            if (_baseShaman.LightningBolt.KnownSpell && ObjectManager.Me.ManaPercentage > 50 && ObjectManager.Me.Position.DistanceTo(target.Position) < 30)
             {
                 _baseShaman.LightningBolt.Launch();
+            }
+
+            if (ObjectManager.Me.ManaPercentage < 25 && ObjectManager.Me.Position.DistanceTo(target.Position) > ObjectManager.Me.InteractDistance)
+            {
+                Move.Forward(Move.MoveAction.DownKey, 50);
+                Thread.Sleep(50);
             }
         }
 
@@ -217,29 +232,6 @@ namespace WoWBot.Client.FightClass.Team.Shaman
         protected override bool TeamInCombat()
         {
             return false;
-        }
-
-        protected override void OptimizeGear()
-        {
-            if (ObjectManager.Me.GetEquipedItemBySlot(wManager.Wow.Enums.InventorySlot.INVSLOT_HAND) == 0)
-            {
-                if (ItemsManager.HasItemById(4914))
-                {
-                    ItemsManager.UseItem(4914);
-                }
-            }
-            if (ItemsManager.HasItemById(805))
-            {
-                ItemsManager.UseItem(805);
-            }
-            if (ItemsManager.HasItemById(5572))
-            {
-                ItemsManager.UseItem(5572);
-            }
-            if (ItemsManager.HasItemById(5571))
-            {
-                ItemsManager.UseItem(5571);
-            }
         }
     }
 }

@@ -58,7 +58,6 @@ namespace WoWBot.Client.FightClass
         protected abstract bool TeamInCombat();
 
         protected abstract void Buff();
-        protected abstract void OptimizeGear();
 
         protected virtual void ManagePet()
         {

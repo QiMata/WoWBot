@@ -81,10 +81,5 @@ namespace WoWBot.Client.FightClass.Team.Druid
                 }
             }
         }
-
-        protected override void OptimizeGear()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

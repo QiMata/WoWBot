@@ -99,10 +99,5 @@ namespace WoWBot.Client.FightClass.Team.Priest
         {
             throw new NotImplementedException();
         }
-
-        protected override void OptimizeGear()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

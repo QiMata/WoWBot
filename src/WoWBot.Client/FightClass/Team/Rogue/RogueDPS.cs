@@ -103,10 +103,5 @@ namespace WoWBot.Client.FightClass.Team.Rogue
         {
             throw new NotImplementedException();
         }
-
-        protected override void OptimizeGear()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

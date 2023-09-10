@@ -108,7 +108,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Database\ItemDatabase.cs" />
+    <Compile Include="Database\MangosDb.cs" />
     <Compile Include="Database\QuestDb.cs" />
     <Compile Include="FightClass\BaseClassWithRotation.cs" />
     <Compile Include="FightClass\CharacterDecisionFightClass.cs" />
@@ -146,19 +146,15 @@
     <Compile Include="FightClass\Team\Warrior\WarriorTank.cs" />
     <Compile Include="FightClass\Team\Warrior\WarriorTeamPlayer.cs" />
     <Compile Include="Helpers\DialogueHelper.cs" />
-    <Compile Include="Models\Armor.cs" />
+    <Compile Include="Models\CharacterEquip.cs" />
+    <Compile Include="Models\Creature.cs" />
+    <Compile Include="Models\CreatureLootTemplate.cs" />
+    <Compile Include="Models\CreatureTemplate.cs" />
+    <Compile Include="Models\GameObject.cs" />
+    <Compile Include="Models\GameObjectLootTemplate.cs" />
     <Compile Include="Models\Item.cs" />
-    <Compile Include="Quest\Quests\CallOfEarth.cs" />
-    <Compile Include="Quest\Quests\APeonsBurden.cs" />
-    <Compile Include="Quest\Quests\Sarkoth.cs" />
-    <Compile Include="Quest\Quests\ThazzrilsPick.cs" />
-    <Compile Include="Quest\Quests\LazyPeons.cs" />
-    <Compile Include="Quest\Quests\GalgarsCactusAppleSurprise.cs" />
-    <Compile Include="Quest\Quests\StingOfTheScorpid.cs" />
-    <Compile Include="Quest\Quests\BurningBladeMedallion.cs" />
-    <Compile Include="Quest\Quests\VileFamiliars.cs" />
-    <Compile Include="Quest\Quests\RuneInscribedParchment.cs" />
-    <Compile Include="Quest\Quests\ReportToSenJinVillage.cs" />
+    <Compile Include="Models\QuestPoiPoint.cs" />
+    <Compile Include="Models\QuestTemplate.cs" />
     <Compile Include="States\GoneFishing.cs" />
     <Compile Include="States\GoToTheHalfhillMarket.cs" />
     <Compile Include="States\Questing.cs" />
@@ -176,8 +172,6 @@
     <Compile Include="Profile\CustomProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Quest\QuestTask.cs" />
-    <Compile Include="Quest\Quests\CuttingTeeth.cs" />
-    <Compile Include="Quest\Quests\YourPlaceInTheWorld.cs" />
     <Compile Include="Util\LinqExtensions.cs" />
   </ItemGroup>
   <ItemGroup>

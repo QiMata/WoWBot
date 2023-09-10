@@ -103,10 +103,5 @@ namespace WoWBot.Client.FightClass.Team.Mage
         {
             throw new NotImplementedException();
         }
-
-        protected override void OptimizeGear()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
