@@ -282,14 +282,13 @@ namespace AdvancedQuester.FSM.States
             if (ToDo.Count > 0)
             {
                 Logging.WriteDebug("Updating ToDo with Log Quests");
-                while (ToDo.Any(x => questsIdsLog.Contains(x.QuestId)))
+                foreach (var questTask in ToDo.Where(x => questsIdsLog.Contains(x.QuestId)))
                 {
                     Dispatcher.FromThread(CustomProfile.Thread)
                         ?.Invoke(() =>
-                    {
-                        ToDo.Remove(ToDo.First(x => questsIdsLog.Contains(x.QuestId)));
-                    });
-                    //ToDo.Remove(ToDo.First(x => questsIdsLog.Contains(x.QuestId)));
+                        {
+                            ToDo.Remove(ToDo.First(x => questsIdsLog.Contains(x.QuestId)));
+                        });
                 }
             }
 
@@ -300,7 +299,11 @@ namespace AdvancedQuester.FSM.States
                     if (ToDo.All(x => x.QuestId != id))
                     {
                         Logging.WriteDebug("Adding quest to ToDo list: " + id);
-                        ToDo.Add(QuestDb.GetQuestTaskById(id));
+                        Dispatcher.FromThread(CustomProfile.Thread)
+                            ?.Invoke(() =>
+                            {
+                                ToDo.Add(QuestDb.GetQuestTaskById(id));
+                            });
                     }
                 }
             }
@@ -353,7 +356,11 @@ namespace AdvancedQuester.FSM.States
 
                     if (completedQuest != null)
                     {
-                        ToDo.Remove(completedQuest);
+                        Dispatcher.FromThread(CustomProfile.Thread)
+                            ?.Invoke(() =>
+                            {
+                                ToDo.Remove(completedQuest);
+                            });
 
                         break;
                     }
