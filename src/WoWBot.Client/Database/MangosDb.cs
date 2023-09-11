@@ -40,10 +40,10 @@ namespace WoWBot.Client.Database
                     {
                         command = connection.CreateCommand();
                         command.CommandText = $@"
-                                        SELECT *
-                                        FROM {table}
-                                        LIMIT 1;
-                                    ";
+                                                    SELECT *
+                                                    FROM {table}
+                                                    LIMIT 1;
+                                                ";
 
                         command.ExecuteReader();
                     }
@@ -380,96 +380,6 @@ namespace WoWBot.Client.Database
                 }
             }
             return questTemplate;
-        }
-        public static Creature GetCreatureById(int id)
-        {
-            Creature creature = null;
-            using (var connection = new SqliteConnection(ConnectionString))
-            {
-                connection.Open();
-
-                var command = connection.CreateCommand();
-                command.CommandText = @"
-                                            SELECT *
-                                            FROM creature
-                                            WHERE id = @id
-                                        ";
-                command.Parameters.AddWithValue("@id", id);
-
-                using (var reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        creature = new Creature
-                        {
-                            Guid = Convert.ToInt32(reader["guid"]),
-                            Id = Convert.ToInt32(reader["id"]),
-                            Map = Convert.ToInt16(reader["map"]),
-                            SpawnMask = Convert.ToByte(reader["spawnMask"]),
-                            ModelId = Convert.ToInt32(reader["modelid"]),
-                            EquipmentId = Convert.ToInt32(reader["equipment_id"]),
-                            PositionX = Convert.ToSingle(reader["position_x"]),
-                            PositionY = Convert.ToSingle(reader["position_y"]),
-                            PositionZ = Convert.ToSingle(reader["position_z"]),
-                            Orientation = Convert.ToSingle(reader["orientation"]),
-                            SpawnTimeSecsMin = Convert.ToInt32(reader["spawntimesecsmin"]),
-                            SpawnTimeSecsMax = Convert.ToInt32(reader["spawntimesecsmax"]),
-                            SpawnDist = Convert.ToSingle(reader["spawndist"]),
-                            CurrentWaypoint = Convert.ToInt32(reader["currentwaypoint"]),
-                            CurHealth = Convert.ToInt32(reader["curhealth"]),
-                            CurMana = Convert.ToInt32(reader["curmana"]),
-                            DeathState = Convert.ToByte(reader["DeathState"]),
-                            MovementType = Convert.ToByte(reader["MovementType"])
-                        };
-                    }
-                }
-            }
-            return creature;
-        }
-        public static Creature GetCreatureByGuid(int guid)
-        {
-            Creature creature = null;
-            using (var connection = new SqliteConnection(ConnectionString))
-            {
-                connection.Open();
-
-                var command = connection.CreateCommand();
-                command.CommandText = @"
-                                            SELECT *
-                                            FROM creature
-                                            WHERE guid = @guid
-                                        ";
-                command.Parameters.AddWithValue("@guid", guid);
-
-                using (var reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        creature = new Creature
-                        {
-                            Guid = Convert.ToInt32(reader["guid"]),
-                            Id = Convert.ToInt32(reader["id"]),
-                            Map = Convert.ToInt16(reader["map"]),
-                            SpawnMask = Convert.ToByte(reader["spawnMask"]),
-                            ModelId = Convert.ToInt32(reader["modelid"]),
-                            EquipmentId = Convert.ToInt32(reader["equipment_id"]),
-                            PositionX = Convert.ToSingle(reader["position_x"]),
-                            PositionY = Convert.ToSingle(reader["position_y"]),
-                            PositionZ = Convert.ToSingle(reader["position_z"]),
-                            Orientation = Convert.ToSingle(reader["orientation"]),
-                            SpawnTimeSecsMin = Convert.ToInt32(reader["spawntimesecsmin"]),
-                            SpawnTimeSecsMax = Convert.ToInt32(reader["spawntimesecsmax"]),
-                            SpawnDist = Convert.ToSingle(reader["spawndist"]),
-                            CurrentWaypoint = Convert.ToInt32(reader["currentwaypoint"]),
-                            CurHealth = Convert.ToInt32(reader["curhealth"]),
-                            CurMana = Convert.ToInt32(reader["curmana"]),
-                            DeathState = Convert.ToByte(reader["DeathState"]),
-                            MovementType = Convert.ToByte(reader["MovementType"])
-                        };
-                    }
-                }
-            }
-            return creature;
         }
         public static List<Creature> GetCreaturesById(int id)
         {
@@ -915,8 +825,10 @@ namespace WoWBot.Client.Database
                 var command = connection.CreateCommand();
                 command.CommandText = @"
                                             SELECT      ct.*
-                                            FROM        creature_template   ct
-                                            WHERE       (ct.NpcFlags & 128) == 128
+                                            FROM        npc_vendor   npcv
+                                            LEFT JOIN   creature_template   ct
+                                            ON          npcv.Entry = ct.Entry
+                                            GROUP BY    ct.Entry
                                         ";
 
                 using (var reader = command.ExecuteReader())
@@ -1014,6 +926,42 @@ namespace WoWBot.Client.Database
                 }
             }
             return creatureTemplates;
+        }
+        public static List<NpcVendorEntry> GetAllItemsSoldByVendorByEntry(int entry)
+        {
+            List<NpcVendorEntry> npcVendorEntries = new List<NpcVendorEntry>();
+            using (var connection = new SqliteConnection(ConnectionString))
+            {
+                connection.Open();
+
+                var command = connection.CreateCommand();
+                command.CommandText = @"
+                                            SELECT      npcv.*
+                                            FROM        npc_vendor   npcv
+                                            WHERE       npcv.Entry = @entry
+                                        ";
+
+                command.Parameters.AddWithValue("@entry", entry);
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        NpcVendorEntry npcVendorEntry = new NpcVendorEntry()
+                        {
+                            Entry = reader.GetInt32(reader.GetOrdinal("entry")),
+                            Item = reader.GetInt32(reader.GetOrdinal("item")),
+                            MaxCount = reader.GetInt32(reader.GetOrdinal("maxcount")),
+                            IncrTime = reader.GetInt32(reader.GetOrdinal("incrtime")),
+                            Slot = reader.GetInt32(reader.GetOrdinal("slot")),
+                            ConditionId = reader.GetInt32(reader.GetOrdinal("condition_id")),
+                            Comments = reader.GetString(reader.GetOrdinal("comments"))
+                        };
+
+                        npcVendorEntries.Add(npcVendorEntry);
+                    }
+                }
+            }
+            return npcVendorEntries;
         }
         public static List<QuestPoiPoint> GetQuestPoiPointsByQuestId(int questId)
         {

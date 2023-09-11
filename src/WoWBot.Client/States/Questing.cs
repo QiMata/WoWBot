@@ -1,11 +1,9 @@
-﻿using Newtonsoft.Json;
-using robotManager.FiniteStateMachine;
+﻿using robotManager.FiniteStateMachine;
 using robotManager.Helpful;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Threading;
@@ -17,7 +15,7 @@ using WoWBot.Client.Database;
 using WoWBot.Client.Helpers;
 using WoWBot.Client.Quest;
 
-namespace AdvancedQuester.FSM.States
+namespace WoWBot.Client.States
 {
     public class Questing : State
     {
@@ -64,7 +62,7 @@ namespace AdvancedQuester.FSM.States
             {
                 return ObjectManager.GetObjectWoWUnit()
                                 .Where(x => x.NpcMarker.Equals(NpcMarker.YellowExclamation))
-                                .OrderBy(x => FindPathingDistance(x.Position, ObjectManager.Me.Position))
+                                .OrderBy(x => MovementHelper.FindPathingDistance(x.Position, ObjectManager.Me.Position))
                                 .ToList();
             }
         }
@@ -75,7 +73,7 @@ namespace AdvancedQuester.FSM.States
             {
                 return ObjectManager.GetObjectWoWUnit()
                                 .Where(x => x.NpcMarker.Equals(NpcMarker.YellowQuestion))
-                                .OrderBy(x => FindPathingDistance(x.Position, ObjectManager.Me.Position))
+                                .OrderBy(x => MovementHelper.FindPathingDistance(x.Position, ObjectManager.Me.Position))
                                 .ToList();
             }
         }
@@ -87,7 +85,7 @@ namespace AdvancedQuester.FSM.States
                 var targets = ObjectManager.GetWoWUnitByEntry(RemainingQuestObjectives.Select(x => x.CreatureId).ToList());
                 targets.RemoveAll(x => TargetGuidBlacklist.ContainsKey(x.Guid) || x.Position.DistanceTo(ObjectManager.Me.Position) > 50);
 
-                return targets.OrderBy(x => FindPathingDistance(x.Position, ObjectManager.Me.Position)).FirstOrDefault();
+                return targets.OrderBy(x => MovementHelper.FindPathingDistance(x.Position, ObjectManager.Me.Position)).FirstOrDefault();
             }
         }
 
@@ -98,24 +96,8 @@ namespace AdvancedQuester.FSM.States
                 var nearbyGameObjects = ObjectManager.GetWoWGameObjectById(RemainingQuestObjectives.Select(x => x.GameObjectId).ToList());
                 nearbyGameObjects.RemoveAll(x => x.Position.DistanceTo(ObjectManager.Me.Position) > 50);
 
-                return nearbyGameObjects.OrderBy(x => FindPathingDistance(x.Position, ObjectManager.Me.Position)).FirstOrDefault();
+                return nearbyGameObjects.OrderBy(x => MovementHelper.FindPathingDistance(x.Position, ObjectManager.Me.Position)).FirstOrDefault();
             }
-        }
-
-        public static float FindPathingDistance(Vector3 from, Vector3 to)
-        {
-            float distance = 0f;
-            List<Vector3> path = PathFinder.FindPath(from, to);
-
-            if (path.Count > 1)
-            {
-                for (int i = 0; i < path.Count - 1; i++)
-                {
-                    distance += path[i].DistanceTo(path[i + 1]);
-                }
-            }
-
-            return distance;
         }
 
         public override void Run()
@@ -123,7 +105,6 @@ namespace AdvancedQuester.FSM.States
             try
             {
                 UpdateToDoWithLogQuests();
-                FindNearbyInnkeeper();
 
                 if (CheckForQuestRelatedEntities())
                 {
@@ -154,10 +135,10 @@ namespace AdvancedQuester.FSM.States
                 {
                     List<WoWUnit> nearbyMobs = ObjectManager.GetObjectWoWUnit()
                                     .FindAll(x => x.IsAlive && x.IsAttackable && x.Reaction == Reaction.Hostile)
-                                    .OrderBy(x => FindPathingDistance(x.Position, ObjectManager.Me.Position))
+                                    .OrderBy(x => MovementHelper.FindPathingDistance(x.Position, ObjectManager.Me.Position))
                                     .ToList();
 
-                    MovementManager.StopMove(); FindNearbyInnkeeper();
+                    MovementManager.StopMove();
 
                     if (questTurnIns.Count > 0 && questTurnIns[0].IsValid)
                     {
@@ -169,7 +150,7 @@ namespace AdvancedQuester.FSM.States
                             questTurnIns = NearbyQuestTurnIns;
                         }
                     }
-                    else if (questGivers.Count > 0 && questGivers[0].IsValid && Quest.GetLogQuestId().Count < 20)
+                    else if (questGivers.Count > 0 && questGivers[0].IsValid && wManager.Wow.Helpers.Quest.GetLogQuestId().Count < 20)
                     {
                         //if (questGivers.Count > 0 && FindNearbyInnkeeper())
                         //{
@@ -188,8 +169,8 @@ namespace AdvancedQuester.FSM.States
                         // or the aggro distance (with padding) is still longer than the distance from the mob to the game object
                         if (nearbyMobs.Count > 0 && nearbyMobs[0].IsValid)
                         {
-                            if (FindPathingDistance(questObject.Position, ObjectManager.Me.Position) < FindPathingDistance(nearbyMobs[0].Position, ObjectManager.Me.Position)
-                                || nearbyMobs[0].AggroDistance + 5 > FindPathingDistance(nearbyMobs[0].Position, questObject.Position))
+                            if (MovementHelper.FindPathingDistance(questObject.Position, ObjectManager.Me.Position) < MovementHelper.FindPathingDistance(nearbyMobs[0].Position, ObjectManager.Me.Position)
+                                || nearbyMobs[0].AggroDistance + 5 > MovementHelper.FindPathingDistance(nearbyMobs[0].Position, questObject.Position))
                             {
                                 // Go ahead and get the game object
                                 HandleInteractingAndLootingGameObject(questObject);
@@ -209,8 +190,8 @@ namespace AdvancedQuester.FSM.States
                     {
                         if (nearbyMobs.Count > 0 && nearbyMobs[0].IsValid)
                         {
-                            if (FindPathingDistance(questTarget.Position, ObjectManager.Me.Position) < FindPathingDistance(nearbyMobs[0].Position, ObjectManager.Me.Position)
-                                || nearbyMobs[0].AggroDistance + 5 > FindPathingDistance(nearbyMobs[0].Position, questTarget.Position))
+                            if (MovementHelper.FindPathingDistance(questTarget.Position, ObjectManager.Me.Position) < MovementHelper.FindPathingDistance(nearbyMobs[0].Position, ObjectManager.Me.Position)
+                                || nearbyMobs[0].AggroDistance + 5 > MovementHelper.FindPathingDistance(nearbyMobs[0].Position, questTarget.Position))
                             {
                                 HandleAttackableTarget(questTarget);
                             }
@@ -256,17 +237,19 @@ namespace AdvancedQuester.FSM.States
         {
             Logging.WriteDebug(Usefuls.MapZoneName);
             Logging.WriteDebug(Usefuls.SubMapZoneName);
+
             Logging.WriteDebug(Lua.LuaDoString<string>("bindlocation = GetBindLocation(); return bindlocation;"));
+
             return false;
         }
 
         private void PickUpQuestsFromNpc(WoWUnit npc)
         {
-            List<int> questsIdsInPreviousLog = Quest.GetLogQuestId()
+            List<int> questsIdsInPreviousLog = wManager.Wow.Helpers.Quest.GetLogQuestId()
                                             .Select(x => x.ID)
                                             .ToList();
 
-            MoveToAndInteractWith(npc);
+            MovementHelper.MoveToAndInteractWith(npc);
 
             DialogueHelper.PickupQuestFromNpc();
 
@@ -275,7 +258,7 @@ namespace AdvancedQuester.FSM.States
 
         private static void UpdateToDoWithLogQuests()
         {
-            List<int> questsIdsLog = Quest.GetLogQuestId()
+            List<int> questsIdsLog = wManager.Wow.Helpers.Quest.GetLogQuestId()
                                                 .Select(x => x.ID)
                                                 .ToList();
 
@@ -311,9 +294,9 @@ namespace AdvancedQuester.FSM.States
 
         private void TurnInQuestForNpc(WoWUnit npc)
         {
-            MoveToAndInteractWith(npc);
+            MovementHelper.MoveToAndInteractWith(npc);
 
-            List<int> questsIdsInPreviousLog = Quest.GetLogQuestId()
+            List<int> questsIdsInPreviousLog = wManager.Wow.Helpers.Quest.GetLogQuestId()
                                                     .Select(x => x.ID)
                                                     .ToList();
 
@@ -333,7 +316,7 @@ namespace AdvancedQuester.FSM.States
             }
             else
             {
-                QuestTask potentialQuest = ToDo.FirstOrDefault(x => x.TurnInNpc.NpcId.Equals(GetNpcIdFromGuid(npc)));
+                QuestTask potentialQuest = ToDo.FirstOrDefault(x => x.TurnInNpc.NpcId.Equals(UnitHelper.GetNpcIdFromGuid(npc.Guid)));
 
                 if (potentialQuest != null)
                 {
@@ -341,10 +324,9 @@ namespace AdvancedQuester.FSM.States
                 }
             }
 
-
             Thread.Sleep(500);
 
-            List<int> questsIdsInLog = Quest.GetLogQuestId()
+            List<int> questsIdsInLog = wManager.Wow.Helpers.Quest.GetLogQuestId()
                                             .Select(x => x.ID)
                                             .ToList();
 
@@ -369,40 +351,6 @@ namespace AdvancedQuester.FSM.States
 
             InventoryHelper.UpgradeToLatestEquipment();
         }
-
-        private void MoveToAndInteractWith(WoWUnit npc)
-        {
-            MoveDefensivelyToPosition(npc.Position, npc.InteractDistance);
-
-            GoToTask.ToPositionAndIntecractWithNpc(npc.Position, GetNpcIdFromGuid(npc));
-        }
-
-        private static int GetNpcIdFromGuid(WoWUnit npc)
-        {
-            return int.Parse(npc.Guid.ToString("X").Substring(6, 4), System.Globalization.NumberStyles.HexNumber);
-        }
-
-        private void MoveDefensivelyToPosition(Vector3 position, float interactDistance = 3.5f)
-        {
-            List<Vector3> path = PathFinder.FindPath(position);
-
-            while (path.Count > 0 && path[0].DistanceTo(position) > interactDistance)
-            {
-                MovementManager.MoveTo(path[0]);
-
-                while (MovementManager.InMovement)
-                {
-                    DefendAgainstAttackingUnits();
-
-                    if (path == null || path.Count == 0 || ObjectManager.Me.InCombatFlagOnly)
-                    {
-                        return;
-                    }
-                }
-                path.RemoveAt(0);
-            }
-            GoToTask.ToPosition(position, interactDistance);
-        }
         private void RotateThroughArea(Vector3 position)
         {
             List<Vector3> path = PathFinder.FindPath(position);
@@ -413,7 +361,7 @@ namespace AdvancedQuester.FSM.States
 
                 while (MovementManager.InMovement)
                 {
-                    DefendAgainstAttackingUnits();
+                    MovementHelper.DefendAgainstAttackingUnits();
 
                     if (CheckForQuestRelatedEntities()
                         || UseNearbyHotSpotQuestConsumeables())
@@ -423,55 +371,6 @@ namespace AdvancedQuester.FSM.States
                     }
                 }
             }
-        }
-
-        private static void DefendAgainstAttackingUnits()
-        {
-            List<WoWUnit> attackingUnits = ObjectManager.GetUnitAttackPlayer();
-
-            if (attackingUnits.Count > 0)
-            {
-                if (attackingUnits.Count > 0 && !Fight.InFight)
-                {
-                    var nearestEnemy = attackingUnits.OrderBy(x => FindPathingDistance(x.Position, ObjectManager.Me.Position)).First();
-
-                    ObjectManager.Me.Target = nearestEnemy.Guid;
-                    MovementManager.StopMove();
-                    Fight.StartFight(nearestEnemy.Guid, true, true, true);
-
-                    return;
-                }
-            }
-            else if (!Fight.InFight)
-            {
-                List<Vector3> currentTrajectory = MovementManager.CurrentPath.ToList();
-
-                if (currentTrajectory.Count > 0 && !ObjectManager.Me.InCombatFlagOnly)
-                {
-                    currentTrajectory = MovementManager.CurrentPath.ToList();
-                    List<WoWUnit> localWoWUnits = FindHostileUnitsNearPosition(currentTrajectory[0]);
-
-                    if (localWoWUnits.Count > 0 && !Fight.InFight)
-                    {
-                        ObjectManager.Me.Target = localWoWUnits[0].Guid;
-
-                        MovementManager.StopMove();
-                        Fight.StartFight(localWoWUnits[0].Guid, true, true, true);
-
-                        return;
-                    }
-                }
-            }
-        }
-
-        private static List<WoWUnit> FindHostileUnitsNearPosition(Vector3 currentTrajectory)
-        {
-            return ObjectManager.GetObjectWoWUnit().FindAll(x => x.IsAlive
-                                                && x.Reaction == Reaction.Hostile
-                                                && x.AggroDistance + ObjectManager.Me.InteractDistance > FindPathingDistance(x.Position, currentTrajectory)
-                                                && x.IsAttackable)
-                                            .OrderBy(x => FindPathingDistance(x.Position, currentTrajectory))
-                                            .ToList();
         }
 
         private bool UseNearbyHotSpotQuestConsumeables()
@@ -547,7 +446,7 @@ namespace AdvancedQuester.FSM.States
                     Thread.Sleep(Usefuls.Latency + 10000);
 
                     RotateThroughArea(ToDo.Where(x => x.IsComplete())
-                        .OrderBy(x => FindPathingDistance(x.TurnInNpc.Position, ObjectManager.Me.Position))
+                        .OrderBy(x => MovementHelper.FindPathingDistance(x.TurnInNpc.Position, ObjectManager.Me.Position))
                         .ToArray()[0].TurnInNpc.Position);
                 }
             }
@@ -559,7 +458,7 @@ namespace AdvancedQuester.FSM.States
 
         private bool HandleInteractingAndLootingGameObject(WoWGameObject gameObject)
         {
-            MoveDefensivelyToPosition(gameObject.Position, gameObject.InteractDistance);
+            MovementHelper.MoveDefensivelyToPosition(gameObject.Position, gameObject.InteractDistance);
 
             Interact.InteractGameObjectAutoLoot(gameObject.GetBaseAddress);
             Usefuls.WaitIsCastingAndLooting();
@@ -578,7 +477,7 @@ namespace AdvancedQuester.FSM.States
 
             if (objective != null && objective.UsableItemId != 0 && objective.CreatureId == target.Entry)
             {
-                MoveDefensivelyToPosition(target.Position, target.InteractDistance);
+                MovementHelper.MoveDefensivelyToPosition(target.Position, target.InteractDistance);
 
                 ItemsManager.UseItem(ItemsManager.GetNameById(objective.UsableItemId));
                 TargetGuidBlacklist.Add(target.Guid, Stopwatch.StartNew());

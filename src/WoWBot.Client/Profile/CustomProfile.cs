@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Threading;
-using AdvancedQuester.FSM.States;
 using Custom_Profile;
 using robotManager.FiniteStateMachine;
 using robotManager.Helpful;
@@ -17,6 +15,7 @@ using WoWBot.Client;
 using WoWBot.Client.Database;
 using WoWBot.Client.Helpers;
 using WoWBot.Client.Models;
+using WoWBot.Client.States;
 
 public class CustomProfile : ICustomProfile
 {
@@ -53,7 +52,7 @@ public class CustomProfile : ICustomProfile
             MangosDb.Initialize();
             PopulateNPCDatabase();
 
-            wManagerSetting.CurrentSetting.PathFinderFromServer = true;
+            wManagerSetting.CurrentSetting.PathFinderFromServer = false;
             wManagerSetting.CurrentSetting.EquipAvailableBagIfFreeContainerSlot = true;
             wManagerSetting.CurrentSetting.TrainNewSkills = true;
             wManagerSetting.CurrentSetting.AvoidWallWithRays = false;
@@ -88,27 +87,27 @@ public class CustomProfile : ICustomProfile
     {
         List<CreatureTemplate> classTrainers = MangosDb.GetAllClassTrainers();
 
-        foreach (CreatureTemplate creatureTemplate in classTrainers)
+        foreach (CreatureTemplate trainerTemplate in classTrainers)
         {
-            Npc.NpcType npcType = GetNpcTypeFromCreatureTemplate(creatureTemplate);
+            Npc.NpcType npcType = GetNpcTypeFromCreatureTemplate(trainerTemplate);
 
             if (npcType != Npc.NpcType.None)
             {
-                Creature creature = MangosDb.GetCreatureById(creatureTemplate.Entry);
+                List<Creature> creatures = MangosDb.GetCreaturesById(trainerTemplate.Entry);
 
-                if (creature != null && NpcDB.ListNpc.FindAll(x => x.Entry == creature.Id).Count == 0)
+                if (creatures.Count > 0 && NpcDB.ListNpc.FindAll(x => x.Entry == creatures[0].Id).Count == 0)
                 {
                     Npc npc = new Npc()
                     {
-                        Entry = creatureTemplate.Entry,
-                        Name = creatureTemplate.Name,
+                        Entry = trainerTemplate.Entry,
+                        Name = trainerTemplate.Name,
                         GossipOption = -1,
                         Active = true,
-                        ContinentId = (wManager.Wow.Enums.ContinentId)creature.Map,
-                        Position = new Vector3(creature.PositionX, creature.PositionY, creature.PositionZ),
-                        PosX = creature.PositionX,
-                        PosY = creature.PositionY,
-                        PosZ = creature.PositionZ,
+                        ContinentId = (wManager.Wow.Enums.ContinentId)creatures[0].Map,
+                        Position = new Vector3(creatures[0].PositionX, creatures[0].PositionY, creatures[0].PositionZ),
+                        PosX = creatures[0].PositionX,
+                        PosY = creatures[0].PositionY,
+                        PosZ = creatures[0].PositionZ,
                         CurrentProfileNpc = true,
                         Save = true,
                         CanFlyTo = false,
@@ -123,22 +122,58 @@ public class CustomProfile : ICustomProfile
         }
 
         List<CreatureTemplate> vendors = MangosDb.GetAllVendors();
-    }
 
-    private Npc.NpcVendorItemClass GetNpcVendorItemClassFromCreatureTemplate(CreatureTemplate creatureTemplate)
-    {
-        int vendorCheckBit = 128;
-        int foodCheckBit = 512;
-
-        if ((creatureTemplate.NpcFlags & vendorCheckBit) == vendorCheckBit)
+        foreach (CreatureTemplate vendorTemplate in vendors)
         {
-            if ((creatureTemplate.NpcFlags & foodCheckBit) == foodCheckBit)
+            List<Creature> creatures = MangosDb.GetCreaturesById(vendorTemplate.Entry);
+
+            if (creatures.Count > 0 && NpcDB.ListNpc.FindAll(x => x.Entry == creatures[0].Id).Count == 0)
             {
-                return Npc.NpcVendorItemClass.Food;
+                List<NpcVendorEntry> npcVendorEntries = MangosDb.GetAllItemsSoldByVendorByEntry(vendorTemplate.Entry);
+                Npc.NpcVendorItemClass npcVendorItemClass = Npc.NpcVendorItemClass.None;
+
+                if (npcVendorEntries.Count > 0)
+                {
+                    List<Item> items = npcVendorEntries.Select(x => MangosDb.GetItemById(x.Item)).ToList();
+
+                    if (items.Count > 0)
+                    {
+                        if (items.Find(x => x.ItemClass == ItemClass.Bag) != null)
+                        {
+                            npcVendorItemClass = Npc.NpcVendorItemClass.Container;
+                        }
+                        else if (items.Find(x => x.ItemClass != ItemClass.Junk) != null)
+                        {
+                            npcVendorItemClass = Npc.NpcVendorItemClass.Consumable;
+                        } else
+                        {
+                            continue;
+                        }
+
+                        Npc npc = new Npc()
+                        {
+                            Entry = vendorTemplate.Entry,
+                            Name = vendorTemplate.Name,
+                            GossipOption = -1,
+                            Active = true,
+                            ContinentId = (wManager.Wow.Enums.ContinentId)creatures[0].Map,
+                            Position = new Vector3(creatures[0].PositionX, creatures[0].PositionY, creatures[0].PositionZ),
+                            PosX = creatures[0].PositionX,
+                            PosY = creatures[0].PositionY,
+                            PosZ = creatures[0].PositionZ,
+                            CurrentProfileNpc = true,
+                            Save = true,
+                            CanFlyTo = false,
+                            Faction = Npc.FactionType.Neutral,
+                            Type = Npc.NpcType.Vendor,
+                            VendorItemClass = npcVendorItemClass,
+                        };
+
+                        NpcDB.AddNpc(npc);
+                    }
+                }
             }
         }
-
-        return Npc.NpcVendorItemClass.None;
     }
     private Npc.NpcType GetNpcTypeFromCreatureTemplate(CreatureTemplate creatureTemplate)
     {
@@ -217,6 +252,7 @@ public class CustomProfile : ICustomProfile
             Fsm.AddState(new ToTown { Priority = 6 });
             Fsm.AddState(new Talents { Priority = 5 });
             Fsm.AddState(new Trainers { Priority = 4 });
+            Fsm.AddState(new InventoryManagement { Priority = 3 });
             Fsm.AddState(new Questing { Priority = 2 });
 
             Fsm.AddState(new Idle { Priority = 0 });

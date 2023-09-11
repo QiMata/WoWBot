@@ -4,11 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WoWBot.Client"
-        xmlns:advancedQuester="clr-namespace:AdvancedQuester.FSM.States"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        <ListBox ItemsSource="{Binding Source={x:Static advancedQuester:Questing.ToDo}}">
+        <ListBox ItemsSource="{Binding Source={x:Static local:States.Questing.ToDo}}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding }" Margin="5"/>
