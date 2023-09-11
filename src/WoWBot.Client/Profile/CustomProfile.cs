@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 using AdvancedQuester.FSM.States;
 using Custom_Profile;
 using robotManager.FiniteStateMachine;
@@ -12,19 +13,37 @@ using wManager.Events;
 using wManager.Wow.Bot.States;
 using wManager.Wow.Class;
 using wManager.Wow.Helpers;
+using WoWBot.Client;
 using WoWBot.Client.Database;
 using WoWBot.Client.Helpers;
 using WoWBot.Client.Models;
 
-class CustomProfile : ICustomProfile
+public class CustomProfile : ICustomProfile
 {
     private static readonly Engine Fsm = new Engine();
     public static bool NeedsGearCheck = false;
+    private MainWindow _logWindowDisposable;
+    public static Thread Thread;
 
     public void Pulse()
     {
         try
         {
+            //Launch Logging Window
+            if (_logWindowDisposable == null)
+            {
+                Thread = new Thread(() =>
+                {
+                    _logWindowDisposable = new MainWindow(); // Replace with your new window class name
+                    _logWindowDisposable.Show();
+
+                    // Start the dispatcher processing
+                    System.Windows.Threading.Dispatcher.Run();
+                });
+
+                Thread.SetApartmentState(ApartmentState.STA);
+                Thread.Start();
+            }
             // Update spell list
             SpellManager.UpdateSpellBook();
 
@@ -170,6 +189,7 @@ class CustomProfile : ICustomProfile
             Fight.StopFight();
             Fsm.StopEngine();
             CustomClass.DisposeCustomClass();
+            _logWindowDisposable?.Dispatcher.InvokeShutdown();
         }
         catch (Exception e)
         {

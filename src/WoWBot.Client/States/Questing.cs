@@ -3,10 +3,12 @@ using robotManager.FiniteStateMachine;
 using robotManager.Helpful;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Windows.Threading;
 using wManager.Wow.Bot.Tasks;
 using wManager.Wow.Enums;
 using wManager.Wow.Helpers;
@@ -24,7 +26,7 @@ namespace AdvancedQuester.FSM.States
         private Vector3 CurrentHotspot = new Vector3();
         private readonly Dictionary<ulong, Stopwatch> TargetGuidBlacklist = new Dictionary<ulong, Stopwatch>();
 
-        private static readonly List<QuestTask> ToDo = new List<QuestTask>();
+        public static readonly ObservableCollection<QuestTask> ToDo = new ObservableCollection<QuestTask>();
 
         public Questing()
         {
@@ -46,7 +48,7 @@ namespace AdvancedQuester.FSM.States
         {
             get
             {
-                return ToDo.FindAll(x => !x.IsComplete())
+                return ToDo.Where(x => !x.IsComplete())
                            .SelectMany(x => x.QuestObjectives)
                                .ToList()
                                .FindAll(x => !x.IsComplete());
@@ -61,7 +63,7 @@ namespace AdvancedQuester.FSM.States
             get
             {
                 return ObjectManager.GetObjectWoWUnit()
-                                .FindAll(x => x.NpcMarker.Equals(NpcMarker.YellowExclamation))
+                                .Where(x => x.NpcMarker.Equals(NpcMarker.YellowExclamation))
                                 .OrderBy(x => FindPathingDistance(x.Position, ObjectManager.Me.Position))
                                 .ToList();
             }
@@ -72,7 +74,7 @@ namespace AdvancedQuester.FSM.States
             get
             {
                 return ObjectManager.GetObjectWoWUnit()
-                                .FindAll(x => x.NpcMarker.Equals(NpcMarker.YellowQuestion))
+                                .Where(x => x.NpcMarker.Equals(NpcMarker.YellowQuestion))
                                 .OrderBy(x => FindPathingDistance(x.Position, ObjectManager.Me.Position))
                                 .ToList();
             }
@@ -134,6 +136,7 @@ namespace AdvancedQuester.FSM.States
             }
             catch (Exception ex)
             {
+                Logging.WriteError($"[Questing] Exception: {ex}");
                 Logging.WriteError("[Questing] " + ex.StackTrace);
             }
         }
@@ -278,15 +281,25 @@ namespace AdvancedQuester.FSM.States
 
             if (ToDo.Count > 0)
             {
-                ToDo.RemoveAll(x => !questsIdsLog.Contains(x.QuestId));
+                Logging.WriteDebug("Updating ToDo with Log Quests");
+                while (ToDo.Any(x => questsIdsLog.Contains(x.QuestId)))
+                {
+                    Dispatcher.FromThread(CustomProfile.Thread)
+                        ?.Invoke(() =>
+                    {
+                        ToDo.Remove(ToDo.First(x => questsIdsLog.Contains(x.QuestId)));
+                    });
+                    //ToDo.Remove(ToDo.First(x => questsIdsLog.Contains(x.QuestId)));
+                }
             }
 
             if (questsIdsLog.Count > 0)
             {
                 foreach (var id in questsIdsLog)
                 {
-                    if (ToDo.FindAll(x => x.QuestId == id).Count == 0)
+                    if (ToDo.All(x => x.QuestId != id))
                     {
+                        Logging.WriteDebug("Adding quest to ToDo list: " + id);
                         ToDo.Add(QuestDb.GetQuestTaskById(id));
                     }
                 }
@@ -317,7 +330,7 @@ namespace AdvancedQuester.FSM.States
             }
             else
             {
-                QuestTask potentialQuest = ToDo.Find(x => x.TurnInNpc.NpcId.Equals(GetNpcIdFromGuid(npc)));
+                QuestTask potentialQuest = ToDo.FirstOrDefault(x => x.TurnInNpc.NpcId.Equals(GetNpcIdFromGuid(npc)));
 
                 if (potentialQuest != null)
                 {
@@ -336,7 +349,7 @@ namespace AdvancedQuester.FSM.States
             {
                 if (!questsIdsInLog.Contains(questId) && questsIdsInPreviousLog.Contains(questId))
                 {
-                    QuestTask completedQuest = ToDo.Find(x => x.QuestId == questId);
+                    QuestTask completedQuest = ToDo.FirstOrDefault(x => x.QuestId == questId);
 
                     if (completedQuest != null)
                     {
@@ -514,7 +527,7 @@ namespace AdvancedQuester.FSM.States
                 }
                 RotateThroughArea(CurrentHotspot);
             }
-            else if (ToDo.FindAll(x => x.IsComplete()).Count > 0)
+            else if (ToDo.Any(x => x.IsComplete()))
             {
                 string s = ItemsManager.GetItemSpell(6948);
                 bool isUsable = false;
@@ -526,7 +539,7 @@ namespace AdvancedQuester.FSM.States
                     Logging.WriteDebug("Using Hearthstone");
                     Thread.Sleep(Usefuls.Latency + 10000);
 
-                    RotateThroughArea(ToDo.FindAll(x => x.IsComplete())
+                    RotateThroughArea(ToDo.Where(x => x.IsComplete())
                         .OrderBy(x => FindPathingDistance(x.TurnInNpc.Position, ObjectManager.Me.Position))
                         .ToArray()[0].TurnInNpc.Position);
                 }

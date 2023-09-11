@@ -13,14 +13,13 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace WoWBot.WindowsOverlay
+namespace WoWBot.Client
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window, IDisposable
     {
-        
         public MainWindow()
         {
             InitializeComponent();
