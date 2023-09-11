@@ -7,12 +7,12 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        <ListBox ItemsSource="{Binding Source={x:Static local:States.Questing.ToDo}}">
+        <!--<ListBox ItemsSource="{Binding Source={x:Static local:States.Questing.ToDo}}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding }" Margin="5"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
-        </ListBox>
+        </ListBox>-->
     </Grid>
 </Window>

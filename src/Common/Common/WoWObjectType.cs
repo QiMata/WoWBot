@@ -7,7 +7,7 @@ using System.Text;
 namespace WoWBot.Common
 {
     [DataContract(Name = "WoWObjectType")]
-    public enum WoWObjectType
+    public enum WoWObjectType1
     {
         [EnumMember]
         Object,

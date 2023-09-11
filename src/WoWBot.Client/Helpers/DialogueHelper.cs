@@ -1,5 +1,4 @@
-﻿using robotManager.Helpful;
-using System;
+﻿using System;
 using System.Threading;
 using wManager.Wow.Helpers;
 

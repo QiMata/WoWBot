@@ -23,7 +23,7 @@ namespace WoWBot.Client.Helpers
                     characterEquip.NeckItem = item;
                     break;
                 case (int)InventoryType.Cloak:
-                    characterEquip.BaclkItem = item;
+                    characterEquip.BackItem = item;
                     break;
                 case (int)InventoryType.Shoulders:
                     characterEquip.ShoulderItem = item;
@@ -200,36 +200,59 @@ namespace WoWBot.Client.Helpers
             }
 
             List<CharacterEquip> characterEquips = PermutateEquips(new List<CharacterEquip>(), headItems);
+            Logging.WriteDebug("headItems.Count " + headItems.Count);
             characterEquips = PermutateEquips(characterEquips, neckItems);
+            Logging.WriteDebug("neckItems.Count " + neckItems.Count);
             characterEquips = PermutateEquips(characterEquips, shoulderItems);
+            Logging.WriteDebug("shoulderItems.Count " + shoulderItems.Count);
             characterEquips = PermutateEquips(characterEquips, chestItems);
+            Logging.WriteDebug("chestItems.Count " + chestItems.Count);
             characterEquips = PermutateEquips(characterEquips, wristItems);
+            Logging.WriteDebug("wristItems.Count " + wristItems.Count);
             characterEquips = PermutateEquips(characterEquips, handsItems);
+            Logging.WriteDebug("handsItems.Count " + handsItems.Count);
             characterEquips = PermutateEquips(characterEquips, waistItems);
+            Logging.WriteDebug("waistItems.Count " + waistItems.Count);
             characterEquips = PermutateEquips(characterEquips, legsItems);
+            Logging.WriteDebug("legsItems.Count " + legsItems.Count);
             characterEquips = PermutateEquips(characterEquips, feetItems);
+            Logging.WriteDebug("feetItems.Count " + feetItems.Count);
             characterEquips = PermutateEquips(characterEquips, fingerItems);
+            Logging.WriteDebug("fingerItems.Count " + fingerItems.Count);
             characterEquips = PermutateEquips(characterEquips, trinketItems);
-            characterEquips = PermutateEquips(characterEquips, fingerItems);
+            Logging.WriteDebug("trinketItems.Count " + trinketItems.Count);
             characterEquips = PermutateEquips(characterEquips, twoHandedItems);
+            Logging.WriteDebug("twoHandedItems.Count " + twoHandedItems.Count);
             characterEquips = PermutateEquips(characterEquips, mainHandItems);
+            Logging.WriteDebug("mainHandItems.Count " + mainHandItems.Count);
             characterEquips = PermutateEquips(characterEquips, oneHandedItems);
+            Logging.WriteDebug("oneHandedItems.Count " + oneHandedItems.Count);
             characterEquips = PermutateEquips(characterEquips, shieldItems);
+            Logging.WriteDebug("shieldItems.Count " + shieldItems.Count);
             characterEquips = PermutateEquips(characterEquips, offHandItems);
+            Logging.WriteDebug("offHandItems.Count " + offHandItems.Count);
             characterEquips = PermutateEquips(characterEquips, holdableItems);
+            Logging.WriteDebug("holdableItems.Count " + holdableItems.Count);
             characterEquips = PermutateEquips(characterEquips, rangedItems);
+            Logging.WriteDebug("rangedItems.Count " + rangedItems.Count);
             characterEquips = PermutateEquips(characterEquips, relicItems);
+            Logging.WriteDebug("relicItems.Count " + relicItems.Count);
             characterEquips = PermutateEquips(characterEquips, thrownItems);
+            Logging.WriteDebug("thrownItems.Count " + thrownItems.Count);
             characterEquips = PermutateEquips(characterEquips, ammoItems);
+            Logging.WriteDebug("ammoItems.Count " + ammoItems.Count);
 
             CharacterEquip bestEquip = new CharacterEquip();
 
+            Logging.WriteDebug("Comparing " + characterEquips.Count + " equipment permutations");
             if (characterEquips.Count > 0)
             {
                 bestEquip = characterEquips[0];
 
                 foreach (CharacterEquip characterEquip in characterEquips)
                 {
+                    Logging.WriteDebug("Comparing " + bestEquip.ToString());
+                    Logging.WriteDebug("To " + characterEquip.ToString());
                     if (characterEquip.GetGearScore() > bestEquip.GetGearScore())
                     {
                         bestEquip = characterEquip;
@@ -334,85 +357,7 @@ namespace WoWBot.Client.Helpers
                 {
                     foreach (Item item in slotItems)
                     {
-                        CharacterEquip newCharacterEquip = (CharacterEquip)characterEquip.Clone();
-
-                        switch (item.InventoryType)
-                        {
-                            case (int)InventoryType.Head:
-                                newCharacterEquip.HeadItem = item;
-                                break;
-                            case (int)InventoryType.Neck:
-                                newCharacterEquip.NeckItem = item;
-                                break;
-                            case (int)InventoryType.Shoulders:
-                                newCharacterEquip.ShoulderItem = item;
-                                break;
-                            case (int)InventoryType.Chest:
-                                newCharacterEquip.ChestItem = item;
-                                break;
-                            case (int)InventoryType.Waist:
-                                newCharacterEquip.WaistItem = item;
-                                break;
-                            case (int)InventoryType.Legs:
-                                newCharacterEquip.LegItem = item;
-                                break;
-                            case (int)InventoryType.Feet:
-                                newCharacterEquip.FeetItem = item;
-                                break;
-                            case (int)InventoryType.Wrists:
-                                newCharacterEquip.WristItem = item;
-                                break;
-                            case (int)InventoryType.Hands:
-                                newCharacterEquip.HandItem = item;
-                                break;
-                            case (int)InventoryType.Finger:
-                                newCharacterEquip.Finger1Item = item;
-                                break;
-                            case (int)InventoryType.Trinket:
-                                newCharacterEquip.Trinket1Item = item;
-                                break;
-                            case (int)InventoryType.Weapon:
-                                newCharacterEquip.HeadItem = item;
-                                break;
-                            case (int)InventoryType.Shield:
-                                if (newCharacterEquip.MainHandItem.InventoryType == (int)InventoryType.TwoHander)
-                                {
-                                    continue;
-                                }
-                                newCharacterEquip.HeadItem = item;
-                                break;
-                            case (int)InventoryType.Ranged:
-                                newCharacterEquip.RangedItem = item;
-                                break;
-                            case (int)InventoryType.Cloak:
-                                newCharacterEquip.BaclkItem = item;
-                                break;
-                            case (int)InventoryType.TwoHander:
-                                newCharacterEquip.MainHandItem = item;
-                                newCharacterEquip.OffHandItem = null;
-                                break;
-                            case (int)InventoryType.MainHand:
-                                newCharacterEquip.HeadItem = item;
-                                break;
-                            case (int)InventoryType.Offhand:
-                                newCharacterEquip.HeadItem = item;
-                                break;
-                            case (int)InventoryType.Holdable:
-                                newCharacterEquip.HeadItem = item;
-                                break;
-                            case (int)InventoryType.Ammo:
-                                newCharacterEquip.HeadItem = item;
-                                break;
-                            case (int)InventoryType.Thrown:
-                                newCharacterEquip.HeadItem = item;
-                                break;
-                            case (int)InventoryType.RangedRight:
-                                newCharacterEquip.RangedItem = item;
-                                break;
-                            case (int)InventoryType.Relic:
-                                newCharacterEquip.RangedItem = item;
-                                break;
-                        }
+                        CharacterEquip newCharacterEquip = ApplyItemToEquipmentBuild(characterEquip, item);
 
                         newCharacterEquips.Add(newCharacterEquip);
                     }
@@ -422,91 +367,88 @@ namespace WoWBot.Client.Helpers
             {
                 foreach (Item item in slotItems)
                 {
-                    CharacterEquip newCharacterEquip = new CharacterEquip();
-
-                    switch (item.InventoryType)
-                    {
-                        case (int)InventoryType.Head:
-                            newCharacterEquip.HeadItem = item;
-                            break;
-                        case (int)InventoryType.Neck:
-                            newCharacterEquip.NeckItem = item;
-                            break;
-                        case (int)InventoryType.Shoulders:
-                            newCharacterEquip.ShoulderItem = item;
-                            break;
-                        case (int)InventoryType.Chest:
-                            newCharacterEquip.ChestItem = item;
-                            break;
-                        case (int)InventoryType.Waist:
-                            newCharacterEquip.WaistItem = item;
-                            break;
-                        case (int)InventoryType.Legs:
-                            newCharacterEquip.LegItem = item;
-                            break;
-                        case (int)InventoryType.Feet:
-                            newCharacterEquip.FeetItem = item;
-                            break;
-                        case (int)InventoryType.Wrists:
-                            newCharacterEquip.WristItem = item;
-                            break;
-                        case (int)InventoryType.Hands:
-                            newCharacterEquip.HandItem = item;
-                            break;
-                        case (int)InventoryType.Finger:
-                            newCharacterEquip.Finger1Item = item;
-                            break;
-                        case (int)InventoryType.Trinket:
-                            newCharacterEquip.Trinket1Item = item;
-                            break;
-                        case (int)InventoryType.Weapon:
-                            newCharacterEquip.MainHandItem = item;
-                            break;
-                        case (int)InventoryType.Shield:
-                            if (newCharacterEquip.MainHandItem.InventoryType == (int)InventoryType.TwoHander)
-                            {
-                                continue;
-                            }
-                            newCharacterEquip.OffHandItem = item;
-                            break;
-                        case (int)InventoryType.Ranged:
-                            newCharacterEquip.RangedItem = item;
-                            break;
-                        case (int)InventoryType.Cloak:
-                            newCharacterEquip.BaclkItem = item;
-                            break;
-                        case (int)InventoryType.TwoHander:
-                            newCharacterEquip.MainHandItem = item;
-                            newCharacterEquip.OffHandItem = null;
-                            break;
-                        case (int)InventoryType.MainHand:
-                            newCharacterEquip.MainHandItem = item;
-                            break;
-                        case (int)InventoryType.Offhand:
-                            newCharacterEquip.OffHandItem = item;
-                            break;
-                        case (int)InventoryType.Holdable:
-                            newCharacterEquip.OffHandItem = item;
-                            break;
-                        case (int)InventoryType.Ammo:
-                            newCharacterEquip.AmmoItem = item;
-                            break;
-                        case (int)InventoryType.Thrown:
-                            newCharacterEquip.AmmoItem = item;
-                            break;
-                        case (int)InventoryType.RangedRight:
-                            newCharacterEquip.RangedItem = item;
-                            break;
-                        case (int)InventoryType.Relic:
-                            newCharacterEquip.RangedItem = item;
-                            break;
-                    }
+                    CharacterEquip newCharacterEquip = ApplyItemToEquipmentBuild(new CharacterEquip(), item);
 
                     newCharacterEquips.Add(newCharacterEquip);
                 }
             }
 
             return newCharacterEquips;
+        }
+
+        private static CharacterEquip ApplyItemToEquipmentBuild(CharacterEquip characterEquip, Item item)
+        {
+            CharacterEquip newCharacterEquip = (CharacterEquip)characterEquip.Clone();
+
+            Logging.WriteDebug(item.Name + " " + item.InventoryType);
+            switch (item.InventoryType)
+            {
+                case (int)InventoryType.Head:
+                    newCharacterEquip.HeadItem = item;
+                    break;
+                case (int)InventoryType.Neck:
+                    newCharacterEquip.NeckItem = item;
+                    break;
+                case (int)InventoryType.Shoulders:
+                    newCharacterEquip.ShoulderItem = item;
+                    break;
+                case (int)InventoryType.Cloak:
+                    newCharacterEquip.BackItem = item;
+                    break;
+                case (int)InventoryType.Chest:
+                    newCharacterEquip.ChestItem = item;
+                    break;
+                case (int)InventoryType.Waist:
+                    newCharacterEquip.WaistItem = item;
+                    break;
+                case (int)InventoryType.Legs:
+                    newCharacterEquip.LegItem = item;
+                    break;
+                case (int)InventoryType.Feet:
+                    newCharacterEquip.FeetItem = item;
+                    break;
+                case (int)InventoryType.Wrists:
+                    newCharacterEquip.WristItem = item;
+                    break;
+                case (int)InventoryType.Hands:
+                    newCharacterEquip.HandItem = item;
+                    break;
+                case (int)InventoryType.Finger:
+                    newCharacterEquip.Finger1Item = item;
+                    break;
+                case (int)InventoryType.Trinket:
+                    newCharacterEquip.Trinket1Item = item;
+                    break;
+                case (int)InventoryType.Shield:
+                case (int)InventoryType.Offhand:
+                    if (newCharacterEquip.MainHandItem.InventoryType != (int)InventoryType.TwoHander)
+                    {
+                        newCharacterEquip.OffHandItem = item;
+                    }
+                    break;
+                case (int)InventoryType.Ranged:
+                case (int)InventoryType.RangedRight:
+                case (int)InventoryType.Relic:
+                    newCharacterEquip.RangedItem = item;
+                    break;
+                case (int)InventoryType.TwoHander:
+                    newCharacterEquip.MainHandItem = item;
+                    newCharacterEquip.OffHandItem = null;
+                    break;
+                case (int)InventoryType.Weapon:
+                case (int)InventoryType.MainHand:
+                    newCharacterEquip.MainHandItem = item;
+                    break;
+                case (int)InventoryType.Holdable:
+                    newCharacterEquip.OffHandItem = item;
+                    break;
+                case (int)InventoryType.Thrown:
+                case (int)InventoryType.Ammo:
+                    newCharacterEquip.AmmoItem = item;
+                    break;
+            }
+
+            return newCharacterEquip;
         }
     }
 }

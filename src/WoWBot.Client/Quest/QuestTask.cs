@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading;
 using Newtonsoft.Json;
 using robotManager.Helpful;
-using wManager.Wow.Helpers;
-using wManager.Wow.ObjectManager;
 using WoWBot.Client.Helpers;
 using WoWBot.Client.Models;
 using WoWBot.Client.NpcBase;

@@ -1,5 +1,6 @@
 ﻿using robotManager.Helpful;
-using wManager.Wow.ObjectManager;
+using System.Runtime.Serialization;
+using wManager.Wow.Helpers;
 
 namespace WoWBot.Client.Models
 {
@@ -164,48 +165,50 @@ namespace WoWBot.Client.Models
         {
             get
             {
+                Logging.WriteDebug("CanEquip: " + Name + " " + Lua.LuaDoString<string>($@" return GetSkillLineInfo({ItemClass});"));
+
                 switch (ItemClass)
                 {
                     case ItemClass.AxeOneHand:
-                        return wManager.Wow.Helpers.Skill.GetValue(wManager.Wow.Enums.SkillLine.Axes) > 0;
+                        return Skill.GetValue(wManager.Wow.Enums.SkillLine.Axes) > 0;
                     case ItemClass.AxeTwoHand:
-                        return wManager.Wow.Helpers.Skill.GetValue(wManager.Wow.Enums.SkillLine.TwoHandedAxes) > 0;
+                        return Skill.GetValue(wManager.Wow.Enums.SkillLine.TwoHandedAxes) > 0;
                     case ItemClass.Bow:
-                        return wManager.Wow.Helpers.Skill.GetValue(wManager.Wow.Enums.SkillLine.Bows) > 0;
+                        return Skill.GetValue(wManager.Wow.Enums.SkillLine.Bows) > 0;
                     case ItemClass.Gun:
-                        return wManager.Wow.Helpers.Skill.GetValue(wManager.Wow.Enums.SkillLine.Guns) > 0;
+                        return Skill.GetValue(wManager.Wow.Enums.SkillLine.Guns) > 0;
                     case ItemClass.MaceOneHand:
-                        return wManager.Wow.Helpers.Skill.GetValue(wManager.Wow.Enums.SkillLine.Maces) > 0;
+                        return Skill.GetValue(wManager.Wow.Enums.SkillLine.Maces) > 0;
                     case ItemClass.MaceTwoHand:
-                        return wManager.Wow.Helpers.Skill.GetValue(wManager.Wow.Enums.SkillLine.TwoHandedMaces) > 0;
+                        return Skill.GetValue(wManager.Wow.Enums.SkillLine.TwoHandedMaces) > 0;
                     case ItemClass.Polearm:
-                        return wManager.Wow.Helpers.Skill.GetValue(wManager.Wow.Enums.SkillLine.Polearms) > 0;
+                        return Skill.GetValue(wManager.Wow.Enums.SkillLine.Polearms) > 0;
                     case ItemClass.SwordOneHand:
-                        return wManager.Wow.Helpers.Skill.GetValue(wManager.Wow.Enums.SkillLine.Swords) > 0;
+                        return Skill.GetValue(wManager.Wow.Enums.SkillLine.Swords) > 0;
                     case ItemClass.SwordTwoHand:
-                        return wManager.Wow.Helpers.Skill.GetValue(wManager.Wow.Enums.SkillLine.TwoHandedSwords) > 0;
+                        return Skill.GetValue(wManager.Wow.Enums.SkillLine.TwoHandedSwords) > 0;
                     case ItemClass.Staff:
-                        return wManager.Wow.Helpers.Skill.GetValue(wManager.Wow.Enums.SkillLine.Staves) > 0;
+                        return Skill.GetValue(wManager.Wow.Enums.SkillLine.Staves) > 0;
                     case ItemClass.Fist:
-                        return wManager.Wow.Helpers.Skill.GetValue(wManager.Wow.Enums.SkillLine.FistWeapons) > 0;
+                        return Skill.GetValue(wManager.Wow.Enums.SkillLine.FistWeapons) > 0;
                     case ItemClass.Dagger:
-                        return wManager.Wow.Helpers.Skill.GetValue(wManager.Wow.Enums.SkillLine.Daggers) > 0;
+                        return Skill.GetValue(wManager.Wow.Enums.SkillLine.Daggers) > 0;
                     case ItemClass.Thrown:
-                        return wManager.Wow.Helpers.Skill.GetValue(wManager.Wow.Enums.SkillLine.Thrown) > 0;
+                        return Skill.GetValue(wManager.Wow.Enums.SkillLine.Thrown) > 0;
                     case ItemClass.Crossbow:
-                        return wManager.Wow.Helpers.Skill.GetValue(wManager.Wow.Enums.SkillLine.Crossbows) > 0;
+                        return Skill.GetValue(wManager.Wow.Enums.SkillLine.Crossbows) > 0;
                     case ItemClass.Wand:
-                        return wManager.Wow.Helpers.Skill.GetValue(wManager.Wow.Enums.SkillLine.Wands) > 0;
+                        return Skill.GetValue(wManager.Wow.Enums.SkillLine.Wands) > 0;
                     case ItemClass.Cloth:
-                        return wManager.Wow.Helpers.Skill.GetValue(wManager.Wow.Enums.SkillLine.Cloth) > 0;
+                        return Skill.GetValue(wManager.Wow.Enums.SkillLine.Cloth) > 0;
                     case ItemClass.Leather:
-                        return wManager.Wow.Helpers.Skill.GetValue(wManager.Wow.Enums.SkillLine.Leather) > 0;
+                        return Skill.GetValue(wManager.Wow.Enums.SkillLine.Leather) > 0;
                     case ItemClass.Mail:
-                        return wManager.Wow.Helpers.Skill.GetValue(wManager.Wow.Enums.SkillLine.Mail) > 0;
+                        return Skill.GetValue(wManager.Wow.Enums.SkillLine.Mail) > 0;
                     case ItemClass.Plate:
-                        return wManager.Wow.Helpers.Skill.GetValue(wManager.Wow.Enums.SkillLine.PlateMail) > 0;
+                        return Skill.GetValue(wManager.Wow.Enums.SkillLine.PlateMail) > 0;
                     case ItemClass.Shield:
-                        return wManager.Wow.Helpers.Skill.GetValue(wManager.Wow.Enums.SkillLine.Shield) > 0;
+                        return Skill.GetValue(wManager.Wow.Enums.SkillLine.Shield) > 0;
                 }
 
                 return true;

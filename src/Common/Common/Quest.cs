@@ -1,6 +1,6 @@
 ﻿namespace WoWBot.Common
 {
-    public class Quest
+    public class Quest1
     {
     }
 }

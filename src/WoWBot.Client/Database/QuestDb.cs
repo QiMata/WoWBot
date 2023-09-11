@@ -1,9 +1,5 @@
-﻿using Newtonsoft.Json;
-using robotManager.Helpful;
+﻿using robotManager.Helpful;
 using System.Collections.Generic;
-using System.Linq;
-using wManager.Wow.Helpers;
-using wManager.Wow.Helpers.FightClassCreator;
 using wManager.Wow.ObjectManager;
 using WoWBot.Client.Models;
 using WoWBot.Client.Quest;

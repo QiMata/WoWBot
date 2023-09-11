@@ -1,5 +1,5 @@
 ﻿using System;
-using wManager.Wow.Helpers;
+using System.Text;
 using wManager.Wow.ObjectManager;
 using WoWBot.Client.Database;
 
@@ -22,7 +22,7 @@ namespace WoWBot.Client.Models
             }
             if (ObjectManager.Me.GetEquipedItemBySlot(wManager.Wow.Enums.InventorySlot.INVSLOT_BACK) != 0)
             {
-                BaclkItem = MangosDb.GetItemById((int)ObjectManager.Me.GetEquipedItemBySlot(wManager.Wow.Enums.InventorySlot.INVSLOT_BACK));
+                BackItem = MangosDb.GetItemById((int)ObjectManager.Me.GetEquipedItemBySlot(wManager.Wow.Enums.InventorySlot.INVSLOT_BACK));
             }
             if (ObjectManager.Me.GetEquipedItemBySlot(wManager.Wow.Enums.InventorySlot.INVSLOT_CHEST) != 0)
             {
@@ -84,7 +84,7 @@ namespace WoWBot.Client.Models
         public Item HeadItem { get; set; }
         public Item NeckItem { get; set; }
         public Item ShoulderItem { get; set; }
-        public Item BaclkItem { get; set; }
+        public Item BackItem { get; set; }
         public Item ChestItem { get; set; }
         public Item WristItem { get; set; }
         public Item HandItem { get; set; }
@@ -100,6 +100,84 @@ namespace WoWBot.Client.Models
         public Item RangedItem { get; set; }
         public Item AmmoItem { get; set; }
 
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            if (HeadItem != null)
+            {
+                sb.Append("HeadItem: " + HeadItem.Name + " ");
+            }
+            if (NeckItem != null)
+            {
+                sb.Append("NeckItem: " + NeckItem.Name + " ");
+            }
+            if (ShoulderItem != null)
+            {
+                sb.Append("ShoulderItem: " + ShoulderItem.Name + " ");
+            }
+            if (BackItem != null)
+            {
+                sb.Append("BackItem: " + BackItem.Name + " ");
+            }
+            if (ChestItem != null)
+            {
+                sb.Append("ChestItem: " + ChestItem.Name + " ");
+            }
+            if (WristItem != null)
+            {
+                sb.Append("WristItem: " + WristItem.Name + " ");
+            }
+            if (HandItem != null)
+            {
+                sb.Append("HandItem: " + HandItem.Name + " ");
+            }
+            if (WaistItem != null)
+            {
+                sb.Append("WaistItem: " + WaistItem.Name + " ");
+            }
+            if (LegItem != null)
+            {
+                sb.Append("LegItem: " + LegItem.Name + " ");
+            }
+            if (FeetItem != null)
+            {
+                sb.Append("FeetItem: " + FeetItem.Name + " ");
+            }
+            if (Finger1Item != null)
+            {
+                sb.Append("Finger1Item: " + Finger1Item.Name + " ");
+            }
+            if (Finger2Item != null)
+            {
+                sb.Append("Finger2Item: " + Finger2Item.Name + " ");
+            }
+            if (Trinket1Item != null)
+            {
+                sb.Append("Trinket1Item: " + Trinket1Item.Name + " ");
+            }
+            if (Trinket2Item != null)
+            {
+                sb.Append("Trinket2Item: " + Trinket2Item.Name + " ");
+            }
+            if (MainHandItem != null)
+            {
+                sb.Append("MainHandItem: " + MainHandItem.Name + " ");
+            }
+            if (OffHandItem != null)
+            {
+                sb.Append("OffHandItem: " + OffHandItem.Name + " ");
+            }
+            if (RangedItem != null)
+            {
+                sb.Append("RangedItem: " + RangedItem.Name + " ");
+            }
+            if (AmmoItem != null)
+            {
+                sb.Append("AmmoItem: " + AmmoItem.Name + " ");
+            }
+            return sb.ToString();
+        }
         public object Clone()
         {
             return MemberwiseClone();
@@ -120,6 +198,10 @@ namespace WoWBot.Client.Models
             if (ShoulderItem != null)
             {
                 gearScore += ShoulderItem.GetArmorGearScore();
+            }
+            if (BackItem != null)
+            {
+                gearScore += BackItem.GetArmorGearScore();
             }
             if (ChestItem != null)
             {

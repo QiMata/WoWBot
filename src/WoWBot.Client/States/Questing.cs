@@ -102,8 +102,15 @@ namespace WoWBot.Client.States
 
         public override void Run()
         {
+            InventoryHelper.UpgradeToLatestEquipment();
+            if (Fight.InFight || ObjectManager.Me.InCombatFlagOnly)
+            {
+                return;
+            }
+
             try
             {
+                MovementHelper.DefendAgainstAttackingUnits();
                 UpdateToDoWithLogQuests();
 
                 if (CheckForQuestRelatedEntities())
@@ -144,8 +151,7 @@ namespace WoWBot.Client.States
                     {
                         while (questTurnIns.Count > 0 && questTurnIns[0].IsValid)
                         {
-                            WoWUnit questNpc = questTurnIns[0];
-                            TurnInQuestForNpc(questNpc);
+                            TurnInQuestForNpc(questTurnIns[0]);
 
                             questTurnIns = NearbyQuestTurnIns;
                         }
@@ -262,18 +268,7 @@ namespace WoWBot.Client.States
                                                 .Select(x => x.ID)
                                                 .ToList();
 
-            if (ToDo.Count > 0)
-            {
-                Logging.WriteDebug("Updating ToDo with Log Quests");
-                foreach (var questTask in ToDo.Where(x => questsIdsLog.Contains(x.QuestId)))
-                {
-                    Dispatcher.FromThread(CustomProfile.Thread)
-                        ?.Invoke(() =>
-                        {
-                            ToDo.Remove(ToDo.First(x => questsIdsLog.Contains(x.QuestId)));
-                        });
-                }
-            }
+            ToDo.Clear();
 
             if (questsIdsLog.Count > 0)
             {
@@ -281,12 +276,12 @@ namespace WoWBot.Client.States
                 {
                     if (ToDo.All(x => x.QuestId != id))
                     {
+                        ToDo.Add(QuestDb.GetQuestTaskById(id));
                         Logging.WriteDebug("Adding quest to ToDo list: " + id);
-                        Dispatcher.FromThread(CustomProfile.Thread)
-                            ?.Invoke(() =>
-                            {
-                                ToDo.Add(QuestDb.GetQuestTaskById(id));
-                            });
+                        //Dispatcher.FromThread(CustomProfile.Thread)
+                        //    ?.Invoke(() =>
+                        //    {
+                        //    });
                     }
                 }
             }
@@ -407,6 +402,7 @@ namespace WoWBot.Client.States
                     Usefuls.WaitIsLooting();
                 }
             }
+            Bag.EquipAvailableBagIfFreeContainerSlot();
             return hasLooted;
         }
 
@@ -420,21 +416,35 @@ namespace WoWBot.Client.States
                 }
                 else
                 {
-                    int index = ClosestObjective.HotSpots.IndexOf(CurrentHotspot);
-                    if (index == ClosestObjective.HotSpots.Count - 1)
+                    if (ClosestObjective.HotSpots.Count > 1)
                     {
-                        ClosestObjective.HotSpots.Reverse();
-                        CurrentHotspot = ClosestObjective.HotSpots[0];
+                        int index = ClosestObjective.HotSpots.IndexOf(CurrentHotspot);
+                        if (index == ClosestObjective.HotSpots.Count - 1)
+                        {
+                            ClosestObjective.HotSpots.Reverse();
+                            CurrentHotspot = ClosestObjective.HotSpots[0];
+                        }
+                        else
+                        {
+                            CurrentHotspot = ClosestObjective.HotSpots[index + 1];
+                        }
                     }
                     else
                     {
-                        CurrentHotspot = ClosestObjective.HotSpots[index + 1];
+                        CurrentHotspot = RemainingQuestObjectives.FindAll(x => x != ClosestObjective)
+                                                        .SelectMany(x => x.HotSpots)
+                                                        .OrderBy(spot => spot.DistanceTo(ObjectManager.Me.Position))
+                                                        .ToList()[0];
                     }
                 }
+                Logging.WriteDebug("Quest " + ClosestObjective.QuestId + " " + ClosestObjective.Index);
+
                 RotateThroughArea(CurrentHotspot);
             }
             else if (ToDo.Any(x => x.IsComplete()))
             {
+                Logging.WriteDebug("Quest " + ClosestObjective.QuestId + " TurnIn");
+
                 string s = ItemsManager.GetItemSpell(6948);
                 bool isUsable = false;
 
@@ -452,6 +462,7 @@ namespace WoWBot.Client.States
             }
             else
             {
+                Logging.WriteDebug("Looking for nearby quest entities...");
                 CheckForQuestRelatedEntities();
             }
         }
@@ -468,25 +479,26 @@ namespace WoWBot.Client.States
             return true;
         }
 
-        private bool HandleAttackableTarget(WoWUnit target)
+        private void HandleAttackableTarget(WoWUnit target)
         {
-            MovementManager.StopMove();
-
             QuestObjective objective = GetQuestObjectiveByTarget(target.Entry);
             ObjectManager.Me.Target = target.Guid;
 
+            while (ObjectManager.Me.IsSwimming != target.IsSwimming || !TraceLine.TraceLineGo(ObjectManager.Me.Position, target.Position, CGWorldFrameHitFlags.HitTestSpellLoS))
+            {
+                GoToTask.ToPosition(target.Position);
+            }
+
             if (objective != null && objective.UsableItemId != 0 && objective.CreatureId == target.Entry)
             {
-                MovementHelper.MoveDefensivelyToPosition(target.Position, target.InteractDistance);
-
                 ItemsManager.UseItem(ItemsManager.GetNameById(objective.UsableItemId));
                 TargetGuidBlacklist.Add(target.Guid, Stopwatch.StartNew());
             }
             else
             {
-                Fight.StartFight(target.Guid, true, true, true);
+                Logging.WriteDebug("Starting attack on quest mob: " + target.Name);
+                Fight.StartFight(target.Guid);
             }
-            return true;
         }
     }
 }

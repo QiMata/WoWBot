@@ -8,7 +8,7 @@ using WoWBot.Playerstate;
 namespace WoWBot.Common
 {
     [DataContract]
-    public class WoWUnit
+    public class WoWUnit1
     {
         [DataMember]
         public bool IsValid { get; set; }
@@ -17,7 +17,7 @@ namespace WoWBot.Common
         [DataMember]
         public ulong Guid { get; set; }
         [DataMember]
-        public WoWObjectType Type { get; set; }
+        public WoWObjectType1 Type { get; set; }
         [DataMember]
         public int Entry { get; set; }
         [DataMember]

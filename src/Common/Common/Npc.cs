@@ -8,7 +8,7 @@ using WoWBot.Playerstate;
 namespace WoWBot.Common
 {
     [DataContract]
-    public class Npc
+    public class Npc1
     {
         [DataMember]
         public string Name { get; set; }
@@ -20,7 +20,7 @@ namespace WoWBot.Common
         public MapInformation MapInformation { get; set; }
 
         [DataMember]
-        public ICollection<Quest> Quests { get; set; }
+        public ICollection<Quest1> Quests { get; set; }
 
         [DataMember]
         public long MaxHealth { get; set; }

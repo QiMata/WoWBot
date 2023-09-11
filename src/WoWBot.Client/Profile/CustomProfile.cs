@@ -10,6 +10,7 @@ using wManager;
 using wManager.Events;
 using wManager.Wow.Bot.States;
 using wManager.Wow.Class;
+using wManager.Wow.Enums;
 using wManager.Wow.Helpers;
 using WoWBot.Client;
 using WoWBot.Client.Database;
@@ -52,11 +53,12 @@ public class CustomProfile : ICustomProfile
             MangosDb.Initialize();
             PopulateNPCDatabase();
 
-            wManagerSetting.CurrentSetting.PathFinderFromServer = false;
+            wManagerSetting.CurrentSetting.PathFinderFromServer = true;
             wManagerSetting.CurrentSetting.EquipAvailableBagIfFreeContainerSlot = true;
             wManagerSetting.CurrentSetting.TrainNewSkills = true;
-            wManagerSetting.CurrentSetting.AvoidWallWithRays = false;
+            wManagerSetting.CurrentSetting.AvoidWallWithRays = true;
             wManagerSetting.CurrentSetting.MinFreeBagSlotsToGoToTown = 2;
+            wManagerSetting.CurrentSetting.UseCTM = false;
             wManagerSetting.CurrentSetting.Save();
 
             ConfigWowForThisBot.ConfigWow();

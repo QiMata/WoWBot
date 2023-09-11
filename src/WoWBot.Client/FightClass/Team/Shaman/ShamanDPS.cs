@@ -119,12 +119,16 @@ namespace WoWBot.Client.FightClass.Team.Shaman
             {
                 WoWUnit target = targets[0];
 
-                if (Conditions.InGameAndConnectedAndAliveAndProductStartedNotInPause && Fight.InFight)
+                if (Conditions.InGameAndConnectedAndAliveAndProductStartedNotInPause)
                 {
-                    if (Lua.LuaDoString<bool>(@"return (UnitIsTapped(""target"")) and (not UnitIsTappedByPlayer(""target""));")
-                        || target.IsDead)
+                    if (Fight.InFight && Lua.LuaDoString<bool>(@"return (UnitIsTapped(""target"")) and (not UnitIsTappedByPlayer(""target""));"))
                     {
                         Fight.StopFight();
+                        Lua.LuaDoString("ClearTarget();");
+                        return;
+                    }
+                    else if (target.IsDead)
+                    {
                         Lua.LuaDoString("ClearTarget();");
                         return;
                     }
@@ -138,10 +142,9 @@ namespace WoWBot.Client.FightClass.Team.Shaman
                     Move.Backward(Move.MoveAction.DownKey, 50);
                     Thread.Sleep(50);
                 }
-                else if (target.Position.DistanceTo(ObjectManager.Me.Position) > 28)
+                else if (target.Position.DistanceTo(ObjectManager.Me.Position) > target.InteractDistance)
                 {
-                    Move.Forward(Move.MoveAction.DownKey, 50);
-                    Thread.Sleep(50);
+                    GoToTask.ToPosition(target.Position);
                 }
 
                 // drop ghost wolf
